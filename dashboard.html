@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Institucional - Análisis de Datos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-page: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius: 10px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --header-bg: #006699;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--bg-card);
+            padding: 1.5rem 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        header img {
+            height: 48px;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+            transform: translateY(-1px);
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border-bottom: 4px solid var(--primary);
+        }
+
+        .kpi-card i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .kpi-card .label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        section {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: var(--header-bg);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+        }
+
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--border);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 1024px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+        Cargando datos desde Google Sheets...
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo-box">
+                <img src="./logo.png" alt="Logo">
+                <h1>Dashboard de Inteligencia</h1>
+            </div>
+            <a href="index.html" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver a Captura
+            </a>
+        </header>
+
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <i class="fas fa-file-alt"></i>
+                <div class="value" id="kpi-total">-</div>
+                <div class="label">TOTAL REGISTROS</div>
+            </div>
+            <div class="kpi-card" style="border-color: #10b981;">
+                <i class="fas fa-building"></i>
+                <div class="value" id="kpi-deps">-</div>
+                <div class="label">DEPENDENCIAS</div>
+            </div>
+            <div class="kpi-card" style="border-color: #f59e0b;">
+                <i class="fas fa-map-marker-alt"></i>
+                <div class="value" id="kpi-muns">-</div>
+                <div class="label">MUNICIPIOS</div>
+            </div>
+            <div class="kpi-card" style="border-color: #ef4444;">
+                <i class="fas fa-tags"></i>
+                <div class="value" id="kpi-temas">-</div>
+                <div class="label">TEMAS CLAVE</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <section>
+                <div class="section-header">
+                    <i class="fas fa-chart-pie"></i>
+                    <h2>Distribución por Género</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartGenero"></canvas>
+                </div>
+            </section>
+
+            <section>
+                <div class="section-header">
+                    <i class="fas fa-chart-bar"></i>
+                    <h2>Top 10 Dependencias</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartDependencia"></canvas>
+                </div>
+            </section>
+
+            <section>
+                <div class="section-header">
+                    <i class="fas fa-map-pin"></i>
+                    <h2>Top 10 Municipios</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartMunicipio"></canvas>
+                </div>
+            </section>
+
+            <section>
+                <div class="section-header">
+                    <i class="fas fa-lightbulb"></i>
+                    <h2>Top 10 Temas</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartTema"></canvas>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTmvlmnKs5SG8tVu1QrtxEcFebjs0pFr4SSwkE-NfR844eQm_N6CRhN_PiJa3yQ2QS99sOeliYWKCyX/pub?gid=0&single=true&output=csv';
+
+        async function initDashboard() {
+            try {
+                Papa.parse(SHEET_CSV_URL, {
+                    download: true,
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function (results) {
+                        const loader = document.getElementById('loadingOverlay');
+                        if (loader) loader.style.display = 'none';
+                        const data = results.data;
+                        updateKPIs(data);
+                        renderCharts(data);
+                    },
+                    error: function (err) {
+                        console.error("Error al cargar CSV:", err);
+                        const loader = document.getElementById('loadingOverlay');
+                        if (loader) loader.innerHTML = "<p style='color:red; background:white; padding: 2rem; border-radius: 10px;'>❌ Error al cargar datos de Google Sheets.<br>Verifique que el documento esté publicado como CSV.</p>";
+                    }
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function updateKPIs(data) {
+            document.getElementById('kpi-total').textContent = data.length;
+            
+            const deps = new Set(data.filter(r => r.Dependencia).map(r => r.Dependencia));
+            document.getElementById('kpi-deps').textContent = deps.size;
+            
+            const muns = new Set(data.filter(r => r.Municipio).map(r => r.Municipio));
+            document.getElementById('kpi-muns').textContent = muns.size;
+            
+            const temas = new Set(data.filter(r => r.Tema).map(r => r.Tema));
+            document.getElementById('kpi-temas').textContent = temas.size;
+        }
+
+        function renderCharts(data) {
+            // Helper for counting
+            function countField(field) {
+                return data.reduce((acc, r) => {
+                    const val = r[field] || 'Sin especificar';
+                    acc[val] = (acc[val] || 0) + 1;
+                    return acc;
+                }, {});
+            }
+
+            // 1. Género (Pie)
+            const genData = countField('Genero');
+            new Chart(document.getElementById('chartGenero'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(genData),
+                    datasets: [{
+                        data: Object.values(genData),
+                        backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899']
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // 2. Top 10 Dependencias (Bar horizontal)
+            const depData = countField('Dependencia');
+            const sortedDeps = Object.entries(depData).sort((a,b) => b[1] - a[1]).slice(0, 10);
+            new Chart(document.getElementById('chartDependencia'), {
+                type: 'bar',
+                data: {
+                    labels: sortedDeps.map(d => d[0]),
+                    datasets: [{
+                        label: 'Registros',
+                        data: sortedDeps.map(d => d[1]),
+                        backgroundColor: '#6366f1'
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { beginAtZero: true }
+                    }
+                }
+            });
+
+            // 3. Top 10 Municipios (Bar)
+            const munData = countField('Municipio');
+            const sortedMuns = Object.entries(munData).sort((a,b) => b[1] - a[1]).slice(0, 10);
+            new Chart(document.getElementById('chartMunicipio'), {
+                type: 'bar',
+                data: {
+                    labels: sortedMuns.map(d => d[0]),
+                    datasets: [{
+                        label: 'Registros',
+                        data: sortedMuns.map(d => d[1]),
+                        backgroundColor: '#10b981'
+                    }]
+                },
+                options: { 
+                    maintainAspectRatio: false, 
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            // 4. Top 10 Temas (Bar horizontal)
+            const temaData = countField('Tema');
+            const sortedTemas = Object.entries(temaData).sort((a,b) => b[1] - a[1]).slice(0, 10);
+            new Chart(document.getElementById('chartTema'), {
+                type: 'bar',
+                data: {
+                    labels: sortedTemas.map(d => d[0]),
+                    datasets: [{
+                        label: 'Registros',
+                        data: sortedTemas.map(d => d[1]),
+                        backgroundColor: '#f59e0b'
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        initDashboard();
+    </script>
+</body>
+
+</html>
