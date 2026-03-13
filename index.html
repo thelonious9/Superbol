@@ -371,7 +371,8 @@
                 <h1>Captura Institucional</h1>
             </div>
             <div id="stats" style="display: flex; align-items: center; gap: 1.5rem;">
-                <a href="dashboard.html" class="btn btn-secondary" style="background: #006699; color: white; padding: 0.5rem 1rem; font-size: 0.9rem;">
+                <a href="dashboard.html" class="btn btn-secondary"
+                    style="background: #006699; color: white; padding: 0.5rem 1rem; font-size: 0.9rem;">
                     <i class="fas fa-chart-line"></i> Ver Dashboard
                 </a>
                 <span id="recordCount" style="color: var(--text-muted); font-weight: 600;">0 registros guardados</span>
@@ -508,7 +509,8 @@
                     <div class="form-group" style="grid-column: 1 / -1;">
                         <label>📝 Notas (opcional)</label>
                         <div class="campo-wrapper">
-                            <textarea id="notas" name="notas" placeholder="Agregue notas adicionales aquí..." rows="1"></textarea>
+                            <textarea id="notas" name="notas" placeholder="Agregue notas adicionales aquí..."
+                                rows="1"></textarea>
                         </div>
                     </div>
                 </div>
@@ -716,7 +718,7 @@
         function setupElasticTextarea() {
             const textarea = document.getElementById('notas');
             if (textarea) {
-                textarea.addEventListener('input', function() {
+                textarea.addEventListener('input', function () {
                     this.style.height = 'auto';
                     this.style.height = (this.scrollHeight) + 'px';
                 });
@@ -873,18 +875,39 @@
                 }
             }
 
-            const blob = new Blob([view], { type: 'text/csv;charset=windows-1252' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.setAttribute('hidden', '');
-            a.setAttribute('href', url);
-            a.setAttribute('download', 'captura_institucional.csv');
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            try {
+                const blob = new Blob([view], { type: 'text/csv;charset=windows-1252' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'captura_institucional.csv';
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }, 100);
+            } catch (err) {
+                console.error("Error al descargar CSV local", err);
+            }
 
             // 2. Respaldar a Google Sheets
-            await respaldarAGoogleSheets(records);
+            const orderedRecords = records.map(r => ({
+                "Género": r.genero || "",
+                "ID": r.id_consecutivo || "",
+                "Fecha": r.fecha || "",
+                "Titular": r.titulo || "",
+                "Dependencia": r.dependencia || "",
+                "Organismo": r.organismo || "",
+                "Municipio": r.municipio || "",
+                "Localidad": r.localidad || "",
+                "Tipo": r.tipo || "",
+                "Emite": r.emite || "",
+                "Tema": r.tema || "",
+                "Notas": r.notas || ""
+            }));
+            await respaldarAGoogleSheets(orderedRecords);
         };
 
         async function respaldarAGoogleSheets(data) {
@@ -903,16 +926,19 @@
             statusEl.style.color = "var(--text-muted)";
 
             try {
-                // Usamos text/plain para evitar preflight (CORS) pero enviamos el JSON
-                const response = await fetch(GOOGLE_SHEETS_URL, {
+                // To avoid missing postData from no-cors redirects, we send the payload
+                // as a standard URL-encoded form field "data"
+                const params = new URLSearchParams();
+                params.append('data', JSON.stringify(data));
+
+                await fetch(GOOGLE_SHEETS_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // Apps Script requiere no-cors o manejar redirects complejos tras preflight
+                    mode: 'no-cors',
                     cache: 'no-cache',
-                    headers: { 'Content-Type': 'text/plain' },
-                    body: JSON.stringify(data)
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
                 });
 
-                // Con no-cors no podemos ver el body, pero si no hay error en fetch, el envío se inició
                 statusEl.textContent = "✅ Respaldo enviado con éxito";
                 statusEl.style.color = "var(--success)";
                 setTimeout(() => { statusEl.textContent = ""; }, 5000);
