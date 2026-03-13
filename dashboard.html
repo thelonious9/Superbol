@@ -12,16 +12,19 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
         :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --bg-page: #f1f5f9;
+            --primary: #350c19;
+            --secondary: #5f4927;
+            --accent1: #856636;
+            --accent2: #ab8345;
+            --bg-page: #f2e0ce;
             --bg-card: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --radius: 10px;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            --header-bg: #006699;
+            --bg-dark-accent: #ccbdae;
+            --text-main: #350c19;
+            --text-muted: #5f4927;
+            --border: #ccbdae;
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(53, 12, 25, 0.1);
+            --header-bg: #350c19;
         }
 
         * {
@@ -119,15 +122,147 @@
         }
 
         .kpi-card .value {
-            font-size: 2rem;
+            font-size: clamp(1.2rem, 3vw, 2.5rem);
             font-weight: 700;
-            color: var(--text-main);
+            color: var(--primary);
+            line-height: 1;
         }
 
         .kpi-card .label {
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
-            font-weight: 600;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.5rem;
+        }
+
+        .kpi-gender-section {
+            width: 100%;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .gender-item {
+            text-align: center;
+        }
+
+        .gender-count {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .gender-percent {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .active-filters-info {
+            font-size: 0.7rem;
+            color: var(--accent1);
+            margin-top: 0.75rem;
+            font-style: italic;
+            min-height: 1rem;
+        }
+
+        /* Filters Bar */
+        .filters-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            align-items: end;
+            margin-bottom: 1.5rem;
+        }
+
+        .filters-bar .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .filters-bar label { font-weight: 600; color: var(--text-muted); font-size: 0.85rem; }
+
+        .filters-bar select, .filters-bar input {
+            padding: 0.5rem 0.6rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text-main);
+        }
+
+        /* Chips (genre selector) */
+        .chips-container {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 0.35rem 0.25rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #fff;
+            min-height: 40px;
+        }
+
+        .chip {
+            padding: 0.35rem 0.6rem;
+            border-radius: 999px;
+            background: transparent;
+            border: 1px solid transparent;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            cursor: pointer;
+        }
+
+        .chip.selected {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        .filters-bar select[multiple] {
+            min-height: 56px;
+        }
+
+        .comparison-section { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .comparison-section .comparison-toggle { display:flex; gap:0.5rem; align-items:center; font-weight:700; }
+
+        .top-selector select {
+            padding: 0.2rem;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            /* Single column for better control of elastic charts */
+            gap: 2rem;
+        }
+
+        .chart-section {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .chart-container-wrapper {
+            transition: height 0.3s ease;
+            width: 100%;
+            overflow: visible;
+        }
+
+        .date-range-inputs {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
 
         .charts-grid {
@@ -145,6 +280,35 @@
             position: relative;
             overflow: hidden;
         }
+
+        .fichas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+
+        .ficha {
+            background: linear-gradient(180deg, #fff 0%, #fbf7f4 100%);
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 6px 18px rgba(53,12,25,0.06);
+            border-left: 4px solid var(--accent1);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .ficha-title {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.95rem;
+            line-height: 1.2;
+            max-height: 2.4rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ficha-meta { font-size: 0.85rem; color: var(--text-muted); }
 
         .section-header {
             background: var(--header-bg);
@@ -194,8 +358,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         @media (max-width: 1024px) {
@@ -215,216 +384,924 @@
     <div class="container">
         <header>
             <div class="logo-box">
-                <img src="./logo.png" alt="Logo">
-                <h1>Dashboard de Inteligencia</h1>
+                <img src="./logo.png" alt="Logo" id="siteLogo">
+                <h1>Datos de emisión</h1>
             </div>
             <a href="index.html" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Volver a Captura
             </a>
         </header>
 
+        <div class="filters-bar" id="filtersBar">
+            <div class="filter-group">
+                <label><i class="fas fa-calendar"></i> Temporalidad</label>
+                <select id="timeGrain" onchange="updateDateInputs('main')">
+                    <option value="day">Día</option>
+                    <option value="month">Mes</option>
+                    <option value="quarter">Trimestre</option>
+                    <option value="year">Año</option>
+                    <option value="range">Personalizar</option>
+                </select>
+            </div>
+
+            <div id="mainDateGroup" class="date-range-inputs">
+                <!-- Inputs dinamically injected here -->
+            </div>
+
+            <div class="filter-group">
+                <label><i class="fas fa-building"></i> Dependencia</label>
+                <select id="filterDep" onchange="handleFilterChange()">
+                    <option value="">Todas</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label><i class="fas fa-map-marker-alt"></i> Municipio</label>
+                <select id="filterMun" onchange="handleFilterChange()">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label><i class="fas fa-tags"></i> Tema</label>
+                <select id="filterTema" onchange="handleFilterChange()">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label><i class=""></i>Género (Serie)</label>
+                    <div id="filterGenderChips" class="chips-container" aria-label="Géneros"></div>
+                    <input type="hidden" id="filterGenderHidden" value="">
+                </div>
+
+            <div class="comparison-section">
+                <div style="display: flex; align-items: center; gap: 1.5rem; width: 100%;">
+                    <label class="comparison-toggle">
+                        <input type="checkbox" id="enableComparison" onchange="toggleComparisonSection()">
+                        Comparar con otro periodo
+                    </label>
+                    <div id="compGrainGroup" class="filter-group"
+                        style="display: none; flex-direction: row; align-items: center; gap: 0.5rem; margin-left: 1rem;">
+                        <label style="margin-bottom: 0;">Escala:</label>
+                        <select id="compTimeGrain" onchange="updateDateInputs('comp')">
+                            <option value="day">Día</option>
+                            <option value="month">Mes</option>
+                            <option value="quarter">Trimestre</option>
+                            <option value="year">Año</option>
+                            <option value="range">Personalizar</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="compDateGroup" class="date-range-inputs"
+                    style="display: none; padding-top: 1rem; width: 100%; gap:1rem;">
+                    <div id="compAGroup" class="filter-group" style="min-width:220px;"></div>
+                    <div id="compBGroup" class="filter-group" style="min-width:220px;"></div>
+                </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+                <button id="clearFilters" class="btn btn-secondary" onclick="resetFilters()"><i class="fas fa-eraser"></i> Limpiar filtros</button>
+            </div>
+        </div>
+
         <div class="kpi-grid">
             <div class="kpi-card">
-                <i class="fas fa-file-alt"></i>
+                <i class="fas fa-shopping-bag"></i>
                 <div class="value" id="kpi-total">-</div>
-                <div class="label">TOTAL REGISTROS</div>
+                <div class="label">TOTAL DE PRODUCTOS</div>
+                <div class="kpi-gender-section" id="kpi-gender-total">
+                    <!-- Dynamic breakdown -->
+                </div>
+                <div id="comp-total" style="font-size: 0.8rem; font-weight: 600;"></div>
+                <div class="active-filters-info" id="filters-total"></div>
             </div>
-            <div class="kpi-card" style="border-color: #10b981;">
-                <i class="fas fa-building"></i>
-                <div class="value" id="kpi-deps">-</div>
-                <div class="label">DEPENDENCIAS</div>
+
+            <div class="kpi-card" style="border-color: #350c19;">
+                <i class="fas fa-newspaper"></i>
+                <div class="value" id="kpi-boletin">-</div>
+                <div class="label">BOLETÍN</div>
+                <div id="comp-boletin" style="font-size: 0.8rem; font-weight: 600;"></div>
+                <div class="active-filters-info" id="filters-boletin"></div>
             </div>
-            <div class="kpi-card" style="border-color: #f59e0b;">
+
+            <div class="kpi-card" style="border-color: #ab8345;">
+                <i class="fas fa-camera"></i>
+                <div class="value" id="kpi-fotonota">-</div>
+                <div class="label">FOTONOTA</div>
+                <div id="comp-fotonota" style="font-size: 0.8rem; font-weight: 600;"></div>
+                <div class="active-filters-info" id="filters-fotonota"></div>
+            </div>
+
+            <div class="kpi-card" style="border-color: var(--accent1);">
                 <i class="fas fa-map-marker-alt"></i>
                 <div class="value" id="kpi-muns">-</div>
                 <div class="label">MUNICIPIOS</div>
+                <div id="comp-muns" style="font-size: 0.8rem; font-weight: 600;"></div>
+                <div class="active-filters-info" id="filters-muns"></div>
             </div>
-            <div class="kpi-card" style="border-color: #ef4444;">
-                <i class="fas fa-tags"></i>
-                <div class="value" id="kpi-temas">-</div>
-                <div class="label">TEMAS CLAVE</div>
+
+            <div class="kpi-card" style="border-color: var(--accent2);">
+                <i class="fas fa-map-pin"></i>
+                <div class="value" id="kpi-locs">-</div>
+                <div class="label">LOCALIDADES</div>
+                <div id="comp-locs" style="font-size: 0.8rem; font-weight: 600;"></div>
+                <div class="active-filters-info" id="filters-locs"></div>
             </div>
         </div>
 
         <div class="charts-grid">
-            <section>
+            <section id="sectionTimeSeries" style="grid-column: 1 / -1;">
                 <div class="section-header">
-                    <i class="fas fa-chart-pie"></i>
-                    <h2>Distribución por Género</h2>
+                    <i class="fas fa-chart-line"></i>
+                    <h2>Serie temporal (por filtros activos)</h2>
                 </div>
                 <div class="chart-container">
-                    <canvas id="chartGenero"></canvas>
+                    <canvas id="chartTimeSeries"></canvas>
                 </div>
             </section>
-
-            <section>
+            <section id="sectionComparison" style="grid-column: 1 / -1;">
                 <div class="section-header">
-                    <i class="fas fa-chart-bar"></i>
-                    <h2>Top 10 Dependencias</h2>
+                    <i class="fas fa-chart-columns"></i>
+                    <h2>Comparativo de periodos</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartComparison"></canvas>
+                </div>
+            </section>
+            <section id="sectionDependencia" style="grid-column: 1 / -1;">
+                <div class="section-header">
+                    <i class="fas fa-building"></i>
+                    <h2>Registros por Dependencia y Género Periodístico</h2>
+                </div>
+                <div class="top-selector">
+                    <label>Mostrar:</label>
+                    <select id="topDepsCount" onchange="handleFilterChange()">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                    </select>
                 </div>
                 <div class="chart-container">
                     <canvas id="chartDependencia"></canvas>
                 </div>
             </section>
 
-            <section>
+            <section id="sectionMunicipio">
                 <div class="section-header">
-                    <i class="fas fa-map-pin"></i>
-                    <h2>Top 10 Municipios</h2>
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h2>Registros por Municipio y Género</h2>
+                </div>
+                <div class="top-selector">
+                    <select id="topMunsCount" onchange="handleFilterChange()">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                    </select>
                 </div>
                 <div class="chart-container">
                     <canvas id="chartMunicipio"></canvas>
                 </div>
             </section>
 
-            <section>
+            <section id="sectionTema">
                 <div class="section-header">
-                    <i class="fas fa-lightbulb"></i>
-                    <h2>Top 10 Temas</h2>
+                    <i class="fas fa-tags"></i>
+                    <h2>Registros por Tema y Género</h2>
+                </div>
+                <div class="top-selector">
+                    <select id="topTemasCount" onchange="handleFilterChange()">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                    </select>
                 </div>
                 <div class="chart-container">
                     <canvas id="chartTema"></canvas>
                 </div>
             </section>
         </div>
+
+        <section>
+            <div class="section-header">
+                <i class="fas fa-list"></i>
+                <h2>Titulares</h2>
+            </div>
+            <div class="fichas-grid" id="fichasContainer">
+                <!-- Dynamic -->
+            </div>
+        </section>
     </div>
 
     <script>
         const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTmvlmnKs5SG8tVu1QrtxEcFebjs0pFr4SSwkE-NfR844eQm_N6CRhN_PiJa3yQ2QS99sOeliYWKCyX/pub?gid=0&single=true&output=csv';
 
+        let rawData = [];
+        let filteredData = [];
+        let comparisonData = [];
+        let comparisonDataA = [];
+        let comparisonDataB = [];
+        let charts = {};
+
         async function initDashboard() {
             try {
-                Papa.parse(SHEET_CSV_URL, {
-                    download: true,
-                    header: true,
-                    skipEmptyLines: true,
-                    complete: function (results) {
-                        const loader = document.getElementById('loadingOverlay');
-                        if (loader) loader.style.display = 'none';
-                        const data = results.data;
-                        updateKPIs(data);
-                        renderCharts(data);
-                    },
-                    error: function (err) {
-                        console.error("Error al cargar CSV:", err);
-                        const loader = document.getElementById('loadingOverlay');
-                        if (loader) loader.innerHTML = "<p style='color:red; background:white; padding: 2rem; border-radius: 10px;'>❌ Error al cargar datos de Google Sheets.<br>Verifique que el documento esté publicado como CSV.</p>";
-                    }
-                });
+                // hide logo if missing to avoid 404 in console
+                const logoEl = document.getElementById('siteLogo');
+                if (logoEl) {
+                    fetch(logoEl.src, { method: 'HEAD' }).then(r => { if (!r.ok) logoEl.style.display = 'none'; }).catch(()=>{ logoEl.style.display = 'none'; });
+                }
+                const loader = document.getElementById('loadingOverlay');
+                // Try fetching CSV via fetch first (better error handling and CORS visibility)
+                const resp = await fetch(SHEET_CSV_URL);
+                if (!resp.ok) throw new Error(`HTTP ${resp.status} ${resp.statusText}`);
+                const csvText = await resp.text();
+                const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
+                if (loader) loader.style.display = 'none';
+                rawData = results.data.map(normalizeRow);
+                console.log('Muestra de rawData (normalizado):', rawData.slice(0,20));
+
+                populateSelect('filterDep', 'Dependencia');
+                populateSelect('filterMun', 'Municipio');
+                populateSelect('filterTema', 'Tema');
+                populateGenderTS();
+
+                // Initialize date inputs
+                updateDateInputs('main');
+
+                // Set specific defaults based on data look (March 2026)
+                const startInput = document.getElementById('mainStart');
+                if (startInput) {
+                    if (startInput.type === 'date') startInput.value = '2026-03-01';
+                    else if (startInput.type === 'month') startInput.value = '2026-03';
+                }
+
+                handleFilterChange();
             } catch (err) {
-                console.error(err);
+                console.error('Error cargando CSV:', err);
+                const loader = document.getElementById('loadingOverlay');
+                if (loader) loader.innerHTML = `<div style="text-align:center;padding:1rem;color:var(--primary);font-weight:700">Error cargando datos: ${err.message}. Verifica la URL o la conexión.</div>`;
             }
         }
 
-        function updateKPIs(data) {
-            document.getElementById('kpi-total').textContent = data.length;
-            
-            const deps = new Set(data.filter(r => r.Dependencia).map(r => r.Dependencia));
-            document.getElementById('kpi-deps').textContent = deps.size;
-            
-            const muns = new Set(data.filter(r => r.Municipio).map(r => r.Municipio));
-            document.getElementById('kpi-muns').textContent = muns.size;
-            
-            const temas = new Set(data.filter(r => r.Tema).map(r => r.Tema));
-            document.getElementById('kpi-temas').textContent = temas.size;
+        function updateDateInputs(prefix) {
+            const grainEl = (prefix === 'main') ? document.getElementById('timeGrain') : document.getElementById('compTimeGrain');
+            const grain = grainEl ? grainEl.value : 'month';
+            const container = prefix === 'main' ? document.getElementById('mainDateGroup') : (prefix === 'comp' ? document.getElementById('compDateGroup') : document.getElementById(prefix + 'Group'));
+
+            let html = '';
+            if (grain === 'day') {
+                html = `<div class="filter-group"><label>Día</label><input type="date" id="${prefix}Start" onchange="handleFilterChange()"></div>`;
+            } else if (grain === 'month') {
+                html = `<div class="filter-group"><label>Mes</label><input type="month" id="${prefix}Start" onchange="handleFilterChange()"></div>`;
+            } else if (grain === 'quarter') {
+                const years = [...new Set(rawData.map(r => parseDate(r.Fecha)?.getFullYear()))].filter(y => y).sort();
+                const yearOpts = years.map(y => `<option value="${y}" ${y === 2026 ? 'selected' : ''}>${y}</option>`).join('');
+                html = `<div class="filter-group"><label>Trimestre</label><div style="display:flex;gap:0.5rem"><select id="${prefix}StartYear" onchange="handleFilterChange()">${yearOpts}</select><select id="${prefix}StartQuarter" onchange="handleFilterChange()"><option value="Q1">Q1</option><option value="Q2">Q2</option><option value="Q3">Q3</option><option value="Q4">Q4</option></select></div></div>`;
+            } else if (grain === 'year') {
+                const years = [...new Set(rawData.map(r => parseDate(r.Fecha)?.getFullYear()))].filter(y => y).sort();
+                html = `<div class="filter-group"><label>Año</label><select id="${prefix}Start" onchange="handleFilterChange()">${years.map(y => `<option value="${y}" ${y === 2026 ? 'selected' : ''}>${y}</option>`).join('')}</select></div>`;
+            } else {
+                html = `<div class="filter-group"><label>Inicio</label><input type="date" id="${prefix}Start" onchange="handleFilterChange()"></div><div class="filter-group"><label>Fin</label><input type="date" id="${prefix}End" onchange="handleFilterChange()"></div>`;
+            }
+            if (prefix === 'main') container.innerHTML = html;
+            else if (prefix === 'comp') {
+                // Build compA and compB HTML specifically to ensure proper IDs for quarter and others
+                let htmlA = '';
+                let htmlB = '';
+                if (grain === 'day') {
+                    htmlA = `<div class="filter-group"><label>Inicio</label><input type="date" id="compAStart" onchange="handleFilterChange()"></div>`;
+                    htmlB = `<div class="filter-group"><label>Inicio</label><input type="date" id="compBStart" onchange="handleFilterChange()"></div>`;
+                } else if (grain === 'month') {
+                    htmlA = `<div class="filter-group"><label>Mes</label><input type="month" id="compAStart" onchange="handleFilterChange()"></div>`;
+                    htmlB = `<div class="filter-group"><label>Mes</label><input type="month" id="compBStart" onchange="handleFilterChange()"></div>`;
+                } else if (grain === 'quarter') {
+                    const years = [...new Set(rawData.map(r => parseDate(r.Fecha)?.getFullYear()))].filter(y => y).sort();
+                    const yearOpts = years.map(y => `<option value="${y}" ${y === 2026 ? 'selected' : ''}>${y}</option>`).join('');
+                    htmlA = `<div class="filter-group"><label>Trimestre</label><div style="display:flex;gap:0.5rem"><select id="compAStartYear" onchange="handleFilterChange()">${yearOpts}</select><select id="compAStartQuarter" onchange="handleFilterChange()"><option value="Q1">Q1</option><option value="Q2">Q2</option><option value="Q3">Q3</option><option value="Q4">Q4</option></select></div></div>`;
+                    htmlB = `<div class="filter-group"><label>Trimestre</label><div style="display:flex;gap:0.5rem"><select id="compBStartYear" onchange="handleFilterChange()">${yearOpts}</select><select id="compBStartQuarter" onchange="handleFilterChange()"><option value="Q1">Q1</option><option value="Q2">Q2</option><option value="Q3">Q3</option><option value="Q4">Q4</option></select></div></div>`;
+                } else if (grain === 'year') {
+                    const years = [...new Set(rawData.map(r => parseDate(r.Fecha)?.getFullYear()))].filter(y => y).sort();
+                    const opts = years.map(y => `<option value="${y}" ${y === 2026 ? 'selected' : ''}>${y}</option>`).join('');
+                    htmlA = `<div class="filter-group"><label>Año</label><select id="compAStart" onchange="handleFilterChange()">${opts}</select></div>`;
+                    htmlB = `<div class="filter-group"><label>Año</label><select id="compBStart" onchange="handleFilterChange()">${opts}</select></div>`;
+                } else {
+                    htmlA = `<div class="filter-group"><label>Inicio</label><input type="date" id="compAStart" onchange="handleFilterChange()"></div><div class="filter-group"><label>Fin</label><input type="date" id="compAEnd" onchange="handleFilterChange()"></div>`;
+                    htmlB = `<div class="filter-group"><label>Inicio</label><input type="date" id="compBStart" onchange="handleFilterChange()"></div><div class="filter-group"><label>Fin</label><input type="date" id="compBEnd" onchange="handleFilterChange()"></div>`;
+                }
+                document.getElementById('compAGroup').innerHTML = `<label style="font-weight:700">Periodo A</label>` + htmlA;
+                document.getElementById('compBGroup').innerHTML = `<label style="font-weight:700">Periodo B</label>` + htmlB;
+            } else {
+                // single group prefix (e.g., compA or compB)
+                container.innerHTML = html;
+            }
+            if (prefix === 'main') handleFilterChange();
         }
 
-        function renderCharts(data) {
-            // Helper for counting
-            function countField(field) {
-                return data.reduce((acc, r) => {
-                    const val = r[field] || 'Sin especificar';
-                    acc[val] = (acc[val] || 0) + 1;
-                    return acc;
-                }, {});
+        function populateSelect(id, field) {
+            const select = document.getElementById(id);
+            const values = [...new Set(rawData.map(r => r[field]).filter(v => v && v !== 'N/A'))].sort();
+            values.forEach(v => {
+                const opt = document.createElement('option');
+                opt.value = v; opt.textContent = v;
+                select.appendChild(opt);
+            });
+        }
+
+        function refreshFilterOptions(filters) {
+            // Rebuilds filter selects showing only options that produce data under the other filters
+            const mapping = [
+                { id: 'filterDep', field: 'Dependencia', key: 'dep' },
+                { id: 'filterMun', field: 'Municipio', key: 'mun' },
+                { id: 'filterTema', field: 'Tema', key: 'tema' }
+            ];
+
+            mapping.forEach(m => {
+                const select = document.getElementById(m.id);
+                const originalOnChange = select.onchange;
+                select.onchange = null; // avoid intermediate triggers
+
+                const tempFilters = { ...filters };
+                tempFilters[m.key] = '';
+                const values = [...new Set(filterByState(rawData, tempFilters).map(r => r[m.field]).filter(v => v && v !== 'N/A'))].sort();
+
+                select.innerHTML = '';
+                const allOpt = document.createElement('option');
+                allOpt.value = '';
+                allOpt.textContent = 'Todos';
+                select.appendChild(allOpt);
+
+                values.forEach(v => {
+                    const opt = document.createElement('option'); opt.value = v; opt.textContent = v; select.appendChild(opt);
+                });
+
+                const cur = filters[m.key];
+                if (cur && values.includes(cur)) select.value = cur; else select.value = '';
+                select.onchange = originalOnChange || handleFilterChange;
+            });
+        }
+
+        function populateGenderTS() {
+            const container = document.getElementById('filterGenderChips');
+            if (!container) return;
+            container.innerHTML = '';
+            const genders = [...new Set(rawData.map(r => r.Género).filter(v => v && v !== 'N/A'))].sort();
+            // Add 'Todos' chip
+            const allChip = document.createElement('button');
+            allChip.className = 'chip selected';
+            allChip.textContent = 'Todos';
+            allChip.dataset.value = '';
+            allChip.onclick = () => { toggleGenreChip(''); };
+            container.appendChild(allChip);
+
+            genders.forEach(g => {
+                const btn = document.createElement('button');
+                btn.className = 'chip';
+                btn.textContent = g;
+                btn.dataset.value = g;
+                btn.onclick = () => { toggleGenreChip(g); };
+                container.appendChild(btn);
+            });
+            // store hidden
+            document.getElementById('filterGenderHidden').value = '';
+        }
+
+        function toggleGenreChip(value) {
+            const container = document.getElementById('filterGenderChips');
+            if (!container) return;
+            const chips = Array.from(container.querySelectorAll('.chip'));
+            const allChip = chips.find(c => c.dataset.value === '');
+            if (value === '') {
+                // select Todos => deselect others
+                chips.forEach(c => c.classList.remove('selected'));
+                if (allChip) allChip.classList.add('selected');
+                document.getElementById('filterGenderHidden').value = '';
+            } else {
+                // toggle selected state
+                const target = chips.find(c => c.dataset.value === value);
+                if (!target) return;
+                const isSelected = target.classList.toggle('selected');
+                // if any specific selected, unselect Todos
+                if (allChip) allChip.classList.remove('selected');
+                // if none selected, re-select Todos
+                const anySelected = chips.some(c => c.dataset.value !== '' && c.classList.contains('selected'));
+                if (!anySelected) { if (allChip) allChip.classList.add('selected'); document.getElementById('filterGenderHidden').value = ''; }
+                else {
+                    const selected = chips.filter(c => c.dataset.value !== '' && c.classList.contains('selected')).map(c=>c.dataset.value);
+                    document.getElementById('filterGenderHidden').value = selected.join('|');
+                }
+            }
+            // notify updates
+            renderTimeSeries();
+            handleFilterChange();
+        }
+
+        function getSelectedGenres() {
+            const container = document.getElementById('filterGenderChips');
+            if (!container) return [];
+            const chips = Array.from(container.querySelectorAll('.chip'));
+            const allChip = chips.find(c => c.dataset.value === '');
+            if (allChip && allChip.classList.contains('selected')) return [];
+            return chips.filter(c => c.dataset.value !== '' && c.classList.contains('selected')).map(c => c.dataset.value);
+        }
+
+        function normalizeRow(row) {
+            // Trim all string fields and normalize common inconsistencies
+            const out = {};
+            Object.entries(row).forEach(([k,v]) => {
+                const key = k?.trim();
+                let val = (typeof v === 'string') ? v.trim() : v;
+                if (typeof val === 'string' && val.toUpperCase() === 'N/A') val = '';
+                out[key] = val;
+            });
+
+            // Normalize Género values into common buckets when possible
+            if (out['Género']) {
+                const g = out['Género'].toLowerCase();
+                if (g.includes('foton') || g.includes('pie de foto') || g === 'pie de foto' || g.includes('pie')) out['Género'] = 'Fotonota';
+                else if (g.includes('bolet')) out['Género'] = 'Boletín';
+                else if (g.includes('tarjeta')) out['Género'] = 'Tarjeta Informativa';
+                else if (g.includes('comunicado conjunto')) out['Género'] = 'Comunicado conjunto';
+                else if (g.includes('comunicado')) out['Género'] = 'Comunicado';
+                else if (g.includes('nota') && !g.includes('foton')) out['Género'] = 'Nota';
+                else out['Género'] = out['Género'];
             }
 
-            // 1. Género (Pie)
-            const genData = countField('Genero');
-            new Chart(document.getElementById('chartGenero'), {
-                type: 'doughnut',
+            // Ensure Fecha is trimmed
+            if (out['Fecha'] && typeof out['Fecha'] === 'string') out['Fecha'] = out['Fecha'].trim();
+            return out;
+        }
+
+        function toggleComparisonSection() {
+            const enabled = document.getElementById('enableComparison').checked;
+            document.getElementById('compDateGroup').style.display = enabled ? 'flex' : 'none';
+            document.getElementById('compGrainGroup').style.display = enabled ? 'flex' : 'none';
+            if (enabled && !document.getElementById('compAStart')) updateDateInputs('comp');
+            handleFilterChange();
+        }
+
+        function handleFilterChange() {
+            const mainFilters = getFilterState('main');
+            filteredData = filterByState(rawData, mainFilters);
+
+            if (document.getElementById('enableComparison').checked) {
+                const compA = getComparisonState('A');
+                const compB = getComparisonState('B');
+                comparisonDataA = filterByState(rawData, compA);
+                comparisonDataB = filterByState(rawData, compB);
+                // for backward compat with badges, keep comparisonData as A
+                comparisonData = comparisonDataA;
+            } else { comparisonData = []; comparisonDataA = []; comparisonDataB = []; }
+
+            updateDashboard(mainFilters);
+        }
+
+        function getFilterState(prefix) {
+            const grain = prefix === 'main' ? document.getElementById('timeGrain').value : document.getElementById('compTimeGrain').value;
+            let startVal = document.getElementById(`${prefix}Start`)?.value;
+            let endVal = document.getElementById(`${prefix}End`)?.value;
+            // support quarter UI where start is split into Year + Quarter
+            const yearEl = document.getElementById(`${prefix}StartYear`);
+            const qEl = document.getElementById(`${prefix}StartQuarter`);
+            if (yearEl && qEl) startVal = `${yearEl.value}-${qEl.value}`;
+
+            return {
+                grain,
+                start: startVal,
+                end: endVal,
+                dep: document.getElementById('filterDep').value,
+                mun: document.getElementById('filterMun').value,
+                tema: document.getElementById('filterTema').value
+            };
+        }
+
+        function getComparisonState(which) {
+            // which: 'A' or 'B'
+            const grain = document.getElementById('compTimeGrain').value;
+            let startVal = document.getElementById(`comp${which}Start`)?.value;
+            let endVal = document.getElementById(`comp${which}End`)?.value;
+            // quarter inputs for comps
+            const yearEl = document.getElementById(`comp${which}StartYear`);
+            const qEl = document.getElementById(`comp${which}StartQuarter`);
+            if (yearEl && qEl) startVal = `${yearEl.value}-${qEl.value}`;
+            return {
+                grain,
+                start: startVal,
+                end: endVal,
+                dep: document.getElementById('filterDep').value,
+                mun: document.getElementById('filterMun').value,
+                tema: document.getElementById('filterTema').value
+            };
+        }
+
+        function parseDate(dateStr) {
+            if (!dateStr) return null;
+            // Accept ISO yyyy-mm-dd as well
+            if (dateStr.includes('-')) {
+                const d = new Date(dateStr);
+                if (!isNaN(d)) return d;
+            }
+            const parts = dateStr.split('/');
+            if (parts.length !== 3) return null;
+            let day = parseInt(parts[0], 10);
+            let month = parseInt(parts[1], 10) - 1;
+            let year = parseInt(parts[2], 10);
+            if (year < 100) year += 2000;
+            return new Date(year, month, day);
+        }
+
+        function filterByState(data, state) {
+            return data.filter(r => {
+                const rDate = parseDate(r.Fecha);
+                if (!rDate) return false;
+
+                let inDate = true;
+                if (state.grain === 'day') {
+                    const d = new Date(state.start);
+                    inDate = rDate.toDateString() === d.toDateString();
+                } else if (state.grain === 'month') {
+                    if (!state.start) return true;
+                    const [y, m] = state.start.split('-').map(Number);
+                    inDate = rDate.getFullYear() === y && (rDate.getMonth() + 1) === m;
+                } else if (state.grain === 'year') {
+                    inDate = rDate.getFullYear() === parseInt(state.start);
+                } else if (state.grain === 'quarter') {
+                    // state.start expected as 'YYYY-Qn'
+                    if (!state.start) return true;
+                    const parts = (state.start || '').split('-Q');
+                    if (parts.length !== 2) return true;
+                    const y = parseInt(parts[0], 10);
+                    const q = parseInt(parts[1].replace('Q',''), 10);
+                    if (!y || !q) return true;
+                    const startMonth = (q - 1) * 3; // 0-based month
+                    const s = new Date(y, startMonth, 1);
+                    const e = new Date(y, startMonth + 3, 0); // last day of quarter
+                    inDate = rDate >= s && rDate <= e;
+                } else {
+                    const s = new Date(state.start); const e = new Date(state.end);
+                    inDate = (!state.start || rDate >= s) && (!state.end || rDate <= e);
+                }
+
+                const inDep = !state.dep || r.Dependencia === state.dep;
+                const inMun = !state.mun || r.Municipio === state.mun;
+                const inTema = !state.tema || r.Tema === state.tema;
+                return inDate && inDep && inMun && inTema;
+            });
+        }
+
+        function updateDashboard(filters) {
+            updateKPIs(filters);
+            renderTimeSeries();
+            renderStackedBar('chartDependencia', 'Dependencia', 'topDepsCount', filters);
+            renderStackedBar('chartMunicipio', 'Municipio', 'topMunsCount', filters);
+            renderStackedBar('chartTema', 'Tema', 'topTemasCount', filters);
+            updateFichas();
+            // Refresh filter option availability after update
+            refreshFilterOptions(filters);
+        }
+
+        function updateKPIs(filters) {
+            const unique = (data, field) => new Set(data.map(r => r[field]).filter(v => v && v !== 'N/A')).size;
+
+            document.getElementById('kpi-total').textContent = filteredData.length;
+            document.getElementById('kpi-muns').textContent = unique(filteredData, 'Municipio');
+            document.getElementById('kpi-locs').textContent = unique(filteredData, 'Localidad');
+
+            // Breakdown counts por género
+            const genderCounts = { 'Boletín': 0, 'Fotonota': 0 };
+            filteredData.forEach(r => { if (genderCounts[r.Género] !== undefined) genderCounts[r.Género]++; });
+
+            document.getElementById('kpi-boletin').textContent = genderCounts['Boletín'] || 0;
+            document.getElementById('kpi-fotonota').textContent = genderCounts['Fotonota'] || 0;
+
+            // Mantener breakdown pequeño dentro de Total
+            updateGenderBreakdown('kpi-gender-total', filteredData);
+
+            if (comparisonData.length > 0) {
+                updateCompBadge('comp-total', filteredData.length, comparisonData.length);
+                updateCompBadge('comp-boletin', genderCounts['Boletín'] || 0, comparisonData.filter(r => r.Género === 'Boletín').length);
+                updateCompBadge('comp-fotonota', genderCounts['Fotonota'] || 0, comparisonData.filter(r => r.Género === 'Fotonota').length);
+                updateCompBadge('comp-muns', unique(filteredData, 'Municipio'), unique(comparisonData, 'Municipio'));
+                updateCompBadge('comp-locs', unique(filteredData, 'Localidad'), unique(comparisonData, 'Localidad'));
+            } else {
+                ['comp-total', 'comp-boletin', 'comp-fotonota', 'comp-muns', 'comp-locs'].forEach(id => document.getElementById(id).innerHTML = '');
+            }
+
+            const filterDesc = [];
+            if (filters.dep) filterDesc.push(`Dep: ${filters.dep}`);
+            if (filters.mun) filterDesc.push(`Mun: ${filters.mun}`);
+            if (filters.tema) filterDesc.push(`Tema: ${filters.tema}`);
+            const desc = filterDesc.length > 0 ? filterDesc.join(' | ') : 'Sin filtros activos';
+            ['total', 'boletin', 'fotonota', 'muns', 'locs'].forEach(id => document.getElementById(`filters-${id}`).textContent = desc);
+
+            // Ajustar tamaño visual de KPIs según magnitud relativa
+            const valuesMap = {
+                'kpi-total': filteredData.length,
+                'kpi-boletin': genderCounts['Boletín'] || 0,
+                'kpi-fotonota': genderCounts['Fotonota'] || 0,
+                'kpi-muns': unique(filteredData, 'Municipio'),
+                'kpi-locs': unique(filteredData, 'Localidad')
+            };
+            const maxVal = Math.max(...Object.values(valuesMap), 1);
+            Object.entries(valuesMap).forEach(([id, val]) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                const scale = 0.8 + (val / maxVal) * 0.8; // between 0.8 and 1.6
+                el.style.fontSize = `${(1.6 * scale).toFixed(2)}rem`;
+            });
+
+            // Also adjust to avoid overflow/overlap
+            adjustKpiSizes(Object.keys(valuesMap));
+        }
+
+        function adjustKpiSizes(ids) {
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                // start from current font size and shrink until fits
+                let fs = parseFloat(window.getComputedStyle(el).fontSize);
+                const container = el.parentElement;
+                if (!container) return;
+                // allow up to 6 iterations
+                for (let i = 0; i < 6; i++) {
+                    // if text fits horizontally, break
+                    if (el.scrollWidth <= container.clientWidth * 0.95) break;
+                    fs = Math.max(10, fs * 0.85);
+                    el.style.fontSize = fs + 'px';
+                }
+            });
+        }
+
+        function updateCompBadge(id, current, past) {
+            const diff = current - past;
+            const pct = past > 0 ? ((diff / past) * 100).toFixed(1) : 'N/A';
+            const color = diff >= 0 ? '#10b981' : '#ef4444';
+            const icon = diff >= 0 ? 'fa-caret-up' : 'fa-caret-down';
+            const pctLabel = pct === 'N/A' ? 'N/A' : `${diff >= 0 ? '+' : ''}${pct}%`;
+            document.getElementById(id).innerHTML = `
+                <span style="color: ${color}; font-weight:700"><i class="fas ${icon}"></i> Comparativo: ${pctLabel} (antes ${past})</span>
+            `;
+        }
+
+        function updateGenderBreakdown(containerId, data) {
+            const container = document.getElementById(containerId);
+            // Derivar géneros dinámicamente para mostrar solo los que existan
+            const gendersList = [...new Set(data.map(r => r.Género).filter(g => g && g !== 'N/A'))];
+            const counts = {};
+            gendersList.forEach(g => counts[g] = 0);
+            data.forEach(r => { if (r.Género && counts[r.Género] !== undefined) counts[r.Género]++; });
+            const total = data.length || 1;
+            container.innerHTML = gendersList.map(label => `
+                <div class="gender-item">
+                    <div class="gender-count">${counts[label]}</div>
+                    <div class="gender-percent">${((counts[label] / total) * 100).toFixed(1)}%</div>
+                    <div style="font-size: 0.6rem; color: var(--text-muted)">${label}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderStackedBar(canvasId, field, topId, filters) {
+            const chartFilters = { ...filters };
+            // Ignore own category filter for the chart contents
+            if (field === 'Dependencia') chartFilters.dep = "";
+            if (field === 'Municipio') chartFilters.mun = "";
+            if (field === 'Tema') chartFilters.tema = "";
+
+            const dataToUse = filterByState(rawData, chartFilters);
+
+            const counts = {};
+            const gendersSet = new Set();
+            dataToUse.forEach(r => { if (r.Género) gendersSet.add(r.Género); });
+            const genders = Array.from(gendersSet.length ? gendersSet : ['Boletín','Fotonota']);
+
+            dataToUse.forEach(r => {
+                const val = r[field] || 'N/A';
+                if (!counts[val]) counts[val] = { total: 0 };
+                genders.forEach(g => { if (counts[val][g] === undefined) counts[val][g] = 0; });
+                if (r.Género && counts[val][r.Género] !== undefined) counts[val][r.Género]++;
+                counts[val].total = (counts[val].total || 0) + 1;
+            });
+
+            const topCount = parseInt(document.getElementById(topId).value);
+            const sortedEntries = Object.entries(counts).sort((a, b) => b[1].total - a[1].total).slice(0, topCount);
+            const sortedKeys = sortedEntries.map(e => e[0]);
+
+            // Elastic container height
+            const container = document.getElementById(canvasId).parentElement;
+            const barHeight = 40;
+            const padding = 100;
+            container.style.height = `${(sortedKeys.length * barHeight) + padding}px`;
+
+            if (charts[canvasId]) charts[canvasId].destroy();
+
+            const colorPalette = ['#350c19','#ab8345','#6b7280','#10b981','#3b82f6'];
+            const datasets = genders.map((g, idx) => ({ label: g, data: sortedKeys.map(k => counts[k][g] || 0), backgroundColor: colorPalette[idx % colorPalette.length] }));
+
+            charts[canvasId] = new Chart(document.getElementById(canvasId), {
+                type: 'bar',
                 data: {
-                    labels: Object.keys(genData),
-                    datasets: [{
-                        data: Object.values(genData),
-                        backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899']
-                    }]
+                    labels: sortedKeys,
+                    datasets
                 },
                 options: {
+                    indexAxis: 'y',
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: 'bottom' }
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    const val = context.raw;
+                                    const total = counts[context.label].total;
+                                    return `${context.dataset.label}: ${val} (${((val / total) * 100).toFixed(1)}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { stacked: true, beginAtZero: true, grid: { display: false } },
+                        y: {
+                            stacked: true,
+                            ticks: {
+                                font: { weight: 'bold', size: 11 },
+                                autoSkip: false
+                            }
+                        }
                     }
                 }
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById('timeGrain').value = 'month';
+            document.getElementById('filterDep').value = '';
+            document.getElementById('filterMun').value = '';
+            document.getElementById('filterTema').value = '';
+            const chips = document.getElementById('filterGenderChips');
+            if (chips) { Array.from(chips.querySelectorAll('.chip')).forEach(c => c.classList.remove('selected')); const all = chips.querySelector('.chip'); if (all) all.classList.add('selected'); document.getElementById('filterGenderHidden').value = ''; }
+            document.getElementById('enableComparison').checked = false;
+            document.getElementById('compDateGroup').style.display = 'none';
+            document.getElementById('compGrainGroup').style.display = 'none';
+            comparisonDataA = []; comparisonDataB = []; comparisonData = [];
+            // clear comp inputs if present
+            ['compAStart','compAEnd','compBStart','compBEnd','compAStartYear','compAStartQuarter','compBStartYear','compBStartQuarter'].forEach(id=>{ const el=document.getElementById(id); if(el) { if(el.tagName==='SELECT') el.selectedIndex=0; else el.value=''; }});
+            updateDateInputs('main');
+            handleFilterChange();
+        }
+
+        function renderComparison(filters, baseKeys) {
+            // baseKeys: array of keys used by time series grouping (optional)
+            // Build groups for current and comparison using same grouping logic as renderTimeSeries
+            const buildGroups = (data) => {
+                const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+                const groups = {};
+                data.forEach(r => {
+                    const d = parseDate(r.Fecha);
+                    if (!d) return;
+                    let key = '';
+                    if (!filters.start && !filters.dep && !filters.mun && !filters.tema) {
+                        key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                    } else if (filters.grain === 'year') {
+                        key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                    } else if (filters.grain === 'month') {
+                        const week = Math.ceil(d.getDate() / 7);
+                        key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-W${week}`;
+                    } else if (filters.grain === 'quarter') {
+                        const quarter = Math.floor(d.getMonth() / 3) + 1;
+                        key = `${d.getFullYear()}-Q${quarter}`;
+                    } else if (filters.grain === 'day') {
+                        key = d.toISOString().slice(0,10);
+                    } else {
+                        key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                    }
+                    if (!groups[key]) groups[key] = 0;
+                    groups[key]++;
+                });
+                return groups;
+            };
+
+            // Compare Period A vs Period B (both come from comparisonDataA/B)
+            const mainGroups = buildGroups(comparisonDataA || []);
+            const compGroups = buildGroups(comparisonDataB || []);
+
+            // Determine labels order: derive from keys present in comp groups A and B (only selected periods)
+            let keys = Object.keys({...mainGroups, ...compGroups});
+            if (!keys.length) keys = Object.keys({...mainGroups, ...compGroups});
+            // ensure unique and sorted
+            keys = [...new Set(keys)];
+            keys.sort((a,b)=> a.localeCompare(b, undefined, {numeric:true}));
+
+            const labels = keys.map(k => {
+                // friendly label
+                if (/^\d{4}-\d{2}-W\d+$/.test(k)) return `Semana ${k.split('-W')[1]}`;
+                if (/^\d{4}-Q\d+$/.test(k)) { const [y,q] = k.split('-Q'); return `Q${q} ${y}`; }
+                if (/^\d{4}-\d{2}$/.test(k)) { const [y,m] = k.split('-'); return `${months[parseInt(m,10)-1]} ${y}`; }
+                if (/^\d{4}-\d{2}-\d{2}$/.test(k)) return k;
+                return k;
             });
 
-            // 2. Top 10 Dependencias (Bar horizontal)
-            const depData = countField('Dependencia');
-            const sortedDeps = Object.entries(depData).sort((a,b) => b[1] - a[1]).slice(0, 10);
-            new Chart(document.getElementById('chartDependencia'), {
+            const mainData = keys.map(k => mainGroups[k] || 0);
+            const compData = keys.map(k => compGroups[k] || 0);
+
+            if (charts['chartComparison']) charts['chartComparison'].destroy();
+            charts['chartComparison'] = new Chart(document.getElementById('chartComparison'), {
                 type: 'bar',
-                data: {
-                    labels: sortedDeps.map(d => d[0]),
-                    datasets: [{
-                        label: 'Registros',
-                        data: sortedDeps.map(d => d[1]),
-                        backgroundColor: '#6366f1'
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { beginAtZero: true }
-                    }
+                data: { labels, datasets: [
+                    { label: 'Periodo actual', data: mainData, backgroundColor: '#350c19' },
+                    { label: 'Periodo comparación', data: compData, backgroundColor: '#ab8345' }
+                ] },
+                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true } } }
+            });
+        }
+
+        function renderTimeSeries() {
+            const filters = getFilterState('main');
+            let data = filterByState(rawData, filters);
+
+            // apply genre chips filter (serie)
+            const selEffective = getSelectedGenres();
+            if (selEffective && selEffective.length) data = data.filter(r => selEffective.includes(r.Género));
+
+            const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+            const groups = {};
+
+            // Decide agrupación más dinámica según temporalidad
+            data.forEach(r => {
+                const d = parseDate(r.Fecha);
+                if (!d) return;
+                let key = '';
+                let label = '';
+
+                if (!filters.start && !filters.dep && !filters.mun && !filters.tema) {
+                    // sin filtros: agrupar por mes-año
+                    key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                    label = `${months[d.getMonth()]} ${d.getFullYear()}`;
+                } else if (filters.grain === 'year') {
+                    // show months of that year (use YYYY-MM key)
+                    key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                    label = months[d.getMonth()];
+                } else if (filters.grain === 'month') {
+                    // group by week number within month, include year-month for uniqueness
+                    const week = Math.ceil(d.getDate() / 7);
+                    key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-W${week}`;
+                    label = `Semana ${week}`;
+                } else if (filters.grain === 'quarter') {
+                    const quarter = Math.floor(d.getMonth() / 3) + 1;
+                    key = `${d.getFullYear()}-Q${quarter}`;
+                    label = `Q${quarter} ${d.getFullYear()}`;
+                } else if (filters.grain === 'day') {
+                    key = d.toISOString().slice(0,10);
+                    label = key;
+                } else {
+                    key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                    label = `${months[d.getMonth()]} ${d.getFullYear()}`;
                 }
+
+                if (!groups[key]) groups[key] = { label, total: 0 };
+                groups[key].total++;
             });
 
-            // 3. Top 10 Municipios (Bar)
-            const munData = countField('Municipio');
-            const sortedMuns = Object.entries(munData).sort((a,b) => b[1] - a[1]).slice(0, 10);
-            new Chart(document.getElementById('chartMunicipio'), {
-                type: 'bar',
-                data: {
-                    labels: sortedMuns.map(d => d[0]),
-                    datasets: [{
-                        label: 'Registros',
-                        data: sortedMuns.map(d => d[1]),
-                        backgroundColor: '#10b981'
-                    }]
-                },
-                options: { 
-                    maintainAspectRatio: false, 
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { beginAtZero: true }
-                    }
-                }
+            // Build ordered labels
+            let entries = Object.entries(groups);
+            // Sort intelligently
+            entries.sort((a,b)=>{
+                const ka = a[0], kb = b[0];
+                // ISO date
+                if (/^\d{4}-\d{2}-\d{2}$/.test(ka) || /^\d{4}-\d{2}-\d{2}$/.test(kb)) return ka.localeCompare(kb);
+                // week keys YYYY-MM-Wn
+                if (/^\d{4}-\d{2}-W\d+$/.test(ka) || /^\d{4}-\d{2}-W\d+$/.test(kb)) return ka.localeCompare(kb, undefined, {numeric:true});
+                // quarter keys YYYY-Qn
+                if (/^\d{4}-Q\d+$/.test(ka) || /^\d{4}-Q\d+$/.test(kb)) return ka.localeCompare(kb, undefined, {numeric:true});
+                // month-year
+                if (/^\d{4}-\d{2}$/.test(ka) && /^\d{4}-\d{2}$/.test(kb)) return ka.localeCompare(kb);
+                return ka.localeCompare(kb, undefined, {numeric:true});
             });
 
-            // 4. Top 10 Temas (Bar horizontal)
-            const temaData = countField('Tema');
-            const sortedTemas = Object.entries(temaData).sort((a,b) => b[1] - a[1]).slice(0, 10);
-            new Chart(document.getElementById('chartTema'), {
-                type: 'bar',
-                data: {
-                    labels: sortedTemas.map(d => d[0]),
-                    datasets: [{
-                        label: 'Registros',
-                        data: sortedTemas.map(d => d[1]),
-                        backgroundColor: '#f59e0b'
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { beginAtZero: true }
-                    }
-                }
+            const labels = entries.map(e=>e[1].label);
+            const dataPoints = entries.map(e=>e[1].total);
+
+            if (charts['chartTimeSeries']) charts['chartTimeSeries'].destroy();
+            charts['chartTimeSeries'] = new Chart(document.getElementById('chartTimeSeries'), {
+                type: 'line',
+                data: { labels, datasets: [{ label: 'Total', data: dataPoints, borderColor: '#350c19', backgroundColor: 'transparent', tension: 0.2 }] },
+                options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
             });
+
+            // if comparison enabled and both A and B provided, render comparative columns
+            if (comparisonDataA && comparisonDataA.length > 0 && comparisonDataB && comparisonDataB.length > 0) renderComparison(filters, entries.map(e=>e[0]));
+        }
+
+        function updateFichas() {
+            const container = document.getElementById('fichasContainer');
+            container.innerHTML = filteredData.slice(0, 30).map(r => `
+                <div class="ficha">
+                    <div>
+                        <div class="ficha-title" title="${r.Titular}">${r.Titular}</div>
+                        <div class="ficha-meta">
+                            <strong><i class="fas fa-calendar"></i> ${r.Fecha}</strong><br>
+                            <strong><i class="fas fa-building"></i> ${r.Dependencia}</strong><br>
+                            <i class="fas fa-map-marker-alt"></i> ${r.Municipio || 'N/A'} - ${r.Localidad || 'N/A'}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
         initDashboard();
