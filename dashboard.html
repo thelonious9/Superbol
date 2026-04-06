@@ -98,7 +98,7 @@
 
         .kpi-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
@@ -1080,7 +1080,7 @@
             refreshFilterOptions(filtersObj);
         }
 
-        function updateKPIs(filters) {
+        function updateKPIs(filtersObj) {
             const unique = (data, field) => new Set(data.map(r => r[field]).filter(v => v && v !== 'N/A')).size;
 
             document.getElementById('kpi-total').textContent = filteredData.length;
@@ -1126,7 +1126,9 @@
 
             sortedGenders.forEach((gender, index) => {
                 const count = genderCounts[gender];
-                if (count === 0 && !getFilterState('main').start && !getFilterState('main').dep) return; // Skip 0s unless deeply filtering
+                // Show cards even if 0 if we're not heavily filtering, for UI consistency
+                if (count === 0 && (filtersObj.dep.length > 0 || filtersObj.mun.length > 0)) return; // Skip 0s ONLY if filtering specifically
+
 
                 const card = document.createElement('div');
                 card.className = 'kpi-card dynamic-card';
