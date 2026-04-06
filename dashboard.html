@@ -186,45 +186,126 @@
 
         .filters-bar label { font-weight: 600; color: var(--text-muted); font-size: 0.85rem; }
 
-        .filters-bar select, .filters-bar input {
-            padding: 0.5rem 0.6rem;
-            border-radius: 8px;
-            border: 1px solid var(--border);
+        /* Custom Multi-select Dropdown Styles */
+        .custom-select-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .select-button {
+            width: 100%;
+            padding: 0.55rem 0.75rem;
             background: white;
-            color: var(--text-main);
-        }
-
-        /* Chips (genre selector) */
-        .chips-container {
-            display: flex;
-            gap: 0.4rem;
-            flex-wrap: wrap;
-            align-items: center;
-            padding: 0.35rem 0.25rem;
             border: 1px solid var(--border);
             border-radius: 8px;
-            background: #fff;
-            min-height: 40px;
-        }
-
-        .chip {
-            padding: 0.35rem 0.6rem;
-            border-radius: 999px;
-            background: transparent;
-            border: 1px solid transparent;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
             font-size: 0.85rem;
             color: var(--text-main);
+            transition: border-color 0.2s;
+        }
+
+        .select-button:hover {
+            border-color: var(--accent1);
+        }
+
+        .select-button::after {
+            content: '\f107';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-left: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .select-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            margin-top: -2px;
+        }
+
+        .select-menu.active {
+            display: flex;
+        }
+
+        .search-box {
+            padding: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.4rem 0.6rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .options-container {
+            max-height: 250px;
+            overflow-y: auto;
+            padding: 0.5rem 0;
+        }
+
+        .option-item {
+            padding: 0.4rem 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.1s;
         }
 
-        .chip.selected {
+        .option-item:hover {
+            background: #f8fafc;
+        }
+
+        .option-item input[type="checkbox"] {
+            cursor: pointer;
+            width: 14px;
+            height: 14px;
+        }
+
+        .option-item label {
+            flex-grow: 1;
+            cursor: pointer;
+            margin: 0 !important;
+            font-weight: 400 !important;
+            color: var(--text-main) !important;
+        }
+
+        .option-item.hidden {
+            display: none;
+        }
+
+        .select-actions {
+            padding: 0.5rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            background: #f8fafc;
+        }
+
+        .select-actions .btn-sm {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
             background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
-        }
-
-        .filters-bar select[multiple] {
-            min-height: 56px;
+            color: white;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
         }
 
         .comparison-section { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 0.5rem; }
@@ -410,30 +491,47 @@
 
             <div class="filter-group">
                 <label><i class="fas fa-building"></i> Dependencia</label>
-                <select id="filterDep" onchange="handleFilterChange()">
-                    <option value="">Todas</option>
-                </select>
+                <div class="custom-select-container" id="containerDep">
+                    <div class="select-button" id="btnDep">Todas</div>
+                    <div class="select-menu" id="menuDep">
+                        <div class="search-box"><input type="text" placeholder="Buscar..." onkeyup="filterOptions(this)"></div>
+                        <div class="options-container" id="optsDep"></div>
+                    </div>
+                </div>
             </div>
 
             <div class="filter-group">
                 <label><i class="fas fa-map-marker-alt"></i> Municipio</label>
-                <select id="filterMun" onchange="handleFilterChange()">
-                    <option value="">Todos</option>
-                </select>
+                <div class="custom-select-container" id="containerMun">
+                    <div class="select-button" id="btnMun">Todos</div>
+                    <div class="select-menu" id="menuMun">
+                        <div class="search-box"><input type="text" placeholder="Buscar..." onkeyup="filterOptions(this)"></div>
+                        <div class="options-container" id="optsMun"></div>
+                    </div>
+                </div>
             </div>
 
             <div class="filter-group">
                 <label><i class="fas fa-tags"></i> Tema</label>
-                <select id="filterTema" onchange="handleFilterChange()">
-                    <option value="">Todos</option>
-                </select>
+                <div class="custom-select-container" id="containerTema">
+                    <div class="select-button" id="btnTema">Todos</div>
+                    <div class="select-menu" id="menuTema">
+                        <div class="search-box"><input type="text" placeholder="Buscar..." onkeyup="filterOptions(this)"></div>
+                        <div class="options-container" id="optsTema"></div>
+                    </div>
+                </div>
             </div>
 
             <div class="filter-group">
-                <label><i class=""></i>Género (Serie)</label>
-                    <div id="filterGenderChips" class="chips-container" aria-label="Géneros"></div>
-                    <input type="hidden" id="filterGenderHidden" value="">
+                <label><i class="fas fa-venus-mars"></i> Género</label>
+                <div class="custom-select-container" id="containerGender">
+                    <div class="select-button" id="btnGender">Todos</div>
+                    <div class="select-menu" id="menuGender">
+                        <div class="search-box"><input type="text" placeholder="Buscar..." onkeyup="filterOptions(this)"></div>
+                        <div class="options-container" id="optsGender"></div>
+                    </div>
                 </div>
+            </div>
 
             <div class="comparison-section">
                 <div style="display: flex; align-items: center; gap: 1.5rem; width: 100%;">
@@ -594,6 +692,117 @@
     <script>
         const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTmvlmnKs5SG8tVu1QrtxEcFebjs0pFr4SSwkE-NfR844eQm_N6CRhN_PiJa3yQ2QS99sOeliYWKCyX/pub?gid=0&single=true&output=csv';
 
+        let filters = {
+            dep: null,
+            mun: null,
+            tema: null,
+            gender: null
+        };
+
+        class MultiSelectFilter {
+            constructor(id, field, title) {
+                this.id = id;
+                this.field = field;
+                this.title = title;
+                this.selected = [];
+                this.options = [];
+                this.btn = document.getElementById(`btn${id}`);
+                this.menu = document.getElementById(`menu${id}`);
+                this.optsContainer = document.getElementById(`opts${id}`);
+                this.init();
+            }
+
+            init() {
+                if (!this.btn) return;
+                this.btn.onclick = (e) => {
+                    e.stopPropagation();
+                    const isActive = this.menu.classList.contains('active');
+                    closeAllMenus();
+                    if (!isActive) this.menu.classList.add('active');
+                };
+
+                if (this.menu) {
+                    this.menu.onclick = (e) => e.stopPropagation();
+                }
+            }
+
+            populate(data, currentFilters) {
+                const availableRows = filterByState(data, { ...currentFilters, [this.id.toLowerCase()]: [] });
+                const values = [...new Set(availableRows.map(r => r[this.field]).filter(v => v && v !== 'N/A'))].sort();
+                this.options = values;
+                this.render();
+            }
+
+            render() {
+                if (!this.optsContainer) return;
+                let html = `
+                    <div class="option-item">
+                        <input type="checkbox" id="all_${this.id}" ${this.selected.length === this.options.length && this.options.length > 0 ? 'checked' : ''} onchange="filters.${this.id.toLowerCase()}.toggleAll(this.checked)">
+                        <label for="all_${this.id}">(Seleccionar todo)</label>
+                    </div>
+                `;
+
+                this.options.forEach((opt, idx) => {
+                    const isChecked = this.selected.includes(opt);
+                    html += `
+                        <div class="option-item">
+                            <input type="checkbox" id="opt_${this.id}_${idx}" value="${opt}" ${isChecked ? 'checked' : ''} onchange="filters.${this.id.toLowerCase()}.toggleOption('${opt}', this.checked)">
+                            <label for="opt_${this.id}_${idx}">${opt}</label>
+                        </div>
+                    `;
+                });
+
+                this.optsContainer.innerHTML = html;
+                this.updateButtonText();
+            }
+
+            toggleOption(val, isChecked) {
+                if (isChecked) {
+                    if (!this.selected.includes(val)) this.selected.push(val);
+                } else {
+                    this.selected = this.selected.filter(v => v !== val);
+                }
+                this.updateButtonText();
+                handleFilterChange();
+            }
+
+            toggleAll(isChecked) {
+                this.selected = isChecked ? [...this.options] : [];
+                this.render();
+                handleFilterChange();
+            }
+
+            updateButtonText() {
+                if (!this.btn) return;
+                if (this.selected.length === 0) this.btn.textContent = 'Todos';
+                else if (this.selected.length === this.options.length) this.btn.textContent = 'Todos';
+                else if (this.selected.length === 1) this.btn.textContent = this.selected[0];
+                else this.btn.textContent = `${this.selected.length} seleccionados`;
+            }
+
+            reset() {
+                this.selected = [];
+                this.updateButtonText();
+            }
+        }
+
+        function closeAllMenus() {
+            document.querySelectorAll('.select-menu').forEach(m => m.classList.remove('active'));
+        }
+
+        window.onclick = () => closeAllMenus();
+
+        function filterOptions(input) {
+            const term = input.value.toLowerCase();
+            const items = input.closest('.select-menu').querySelectorAll('.option-item');
+            items.forEach(item => {
+                const label = item.querySelector('label');
+                if (!label || label.textContent.includes('(Seleccionar todo)')) return;
+                const text = label.textContent.toLowerCase();
+                item.classList.toggle('hidden', !text.includes(term));
+            });
+        }
+
         let rawData = [];
         let filteredData = [];
         let comparisonData = [];
@@ -603,30 +812,32 @@
 
         async function initDashboard() {
             try {
-                // hide logo if missing to avoid 404 in console
                 const logoEl = document.getElementById('siteLogo');
                 if (logoEl) {
                     fetch(logoEl.src, { method: 'HEAD' }).then(r => { if (!r.ok) logoEl.style.display = 'none'; }).catch(()=>{ logoEl.style.display = 'none'; });
                 }
                 const loader = document.getElementById('loadingOverlay');
-                // Try fetching CSV via fetch first (better error handling and CORS visibility)
                 const resp = await fetch(SHEET_CSV_URL);
                 if (!resp.ok) throw new Error(`HTTP ${resp.status} ${resp.statusText}`);
                 const csvText = await resp.text();
                 const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
                 if (loader) loader.style.display = 'none';
                 rawData = results.data.map(normalizeRow);
-                console.log('Muestra de rawData (normalizado):', rawData.slice(0,20));
 
-                populateSelect('filterDep', 'Dependencia');
-                populateSelect('filterMun', 'Municipio');
-                populateSelect('filterTema', 'Tema');
-                populateGenderTS();
+                // Initialize Filter Objects
+                filters.dep = new MultiSelectFilter('Dep', 'Dependencia', 'Dependencia');
+                filters.mun = new MultiSelectFilter('Mun', 'Municipio', 'Municipio');
+                filters.tema = new MultiSelectFilter('Tema', 'Tema', 'Tema');
+                filters.gender = new MultiSelectFilter('Gender', 'Género', 'Género');
 
-                // Initialize date inputs
+                // Initial population
+                filters.dep.populate(rawData, {});
+                filters.mun.populate(rawData, {});
+                filters.tema.populate(rawData, {});
+                filters.gender.populate(rawData, {});
+
                 updateDateInputs('main');
 
-                // Set specific defaults based on data look (March 2026)
                 const startInput = document.getElementById('mainStart');
                 if (startInput) {
                     if (startInput.type === 'date') startInput.value = '2026-03-01';
@@ -695,111 +906,11 @@
             if (prefix === 'main') handleFilterChange();
         }
 
-        function populateSelect(id, field) {
-            const select = document.getElementById(id);
-            const values = [...new Set(rawData.map(r => r[field]).filter(v => v && v !== 'N/A'))].sort();
-            values.forEach(v => {
-                const opt = document.createElement('option');
-                opt.value = v; opt.textContent = v;
-                select.appendChild(opt);
-            });
-        }
-
-        function refreshFilterOptions(filters) {
-            // Rebuilds filter selects showing only options that produce data under the other filters
-            const mapping = [
-                { id: 'filterDep', field: 'Dependencia', key: 'dep' },
-                { id: 'filterMun', field: 'Municipio', key: 'mun' },
-                { id: 'filterTema', field: 'Tema', key: 'tema' }
-            ];
-
-            mapping.forEach(m => {
-                const select = document.getElementById(m.id);
-                const originalOnChange = select.onchange;
-                select.onchange = null; // avoid intermediate triggers
-
-                const tempFilters = { ...filters };
-                tempFilters[m.key] = '';
-                const values = [...new Set(filterByState(rawData, tempFilters).map(r => r[m.field]).filter(v => v && v !== 'N/A'))].sort();
-
-                select.innerHTML = '';
-                const allOpt = document.createElement('option');
-                allOpt.value = '';
-                allOpt.textContent = 'Todos';
-                select.appendChild(allOpt);
-
-                values.forEach(v => {
-                    const opt = document.createElement('option'); opt.value = v; opt.textContent = v; select.appendChild(opt);
-                });
-
-                const cur = filters[m.key];
-                if (cur && values.includes(cur)) select.value = cur; else select.value = '';
-                select.onchange = originalOnChange || handleFilterChange;
-            });
-        }
-
-        function populateGenderTS() {
-            const container = document.getElementById('filterGenderChips');
-            if (!container) return;
-            container.innerHTML = '';
-            const genders = [...new Set(rawData.map(r => r.Género).filter(v => v && v !== 'N/A'))].sort();
-            // Add 'Todos' chip
-            const allChip = document.createElement('button');
-            allChip.className = 'chip selected';
-            allChip.textContent = 'Todos';
-            allChip.dataset.value = '';
-            allChip.onclick = () => { toggleGenreChip(''); };
-            container.appendChild(allChip);
-
-            genders.forEach(g => {
-                const btn = document.createElement('button');
-                btn.className = 'chip';
-                btn.textContent = g;
-                btn.dataset.value = g;
-                btn.onclick = () => { toggleGenreChip(g); };
-                container.appendChild(btn);
-            });
-            // store hidden
-            document.getElementById('filterGenderHidden').value = '';
-        }
-
-        function toggleGenreChip(value) {
-            const container = document.getElementById('filterGenderChips');
-            if (!container) return;
-            const chips = Array.from(container.querySelectorAll('.chip'));
-            const allChip = chips.find(c => c.dataset.value === '');
-            if (value === '') {
-                // select Todos => deselect others
-                chips.forEach(c => c.classList.remove('selected'));
-                if (allChip) allChip.classList.add('selected');
-                document.getElementById('filterGenderHidden').value = '';
-            } else {
-                // toggle selected state
-                const target = chips.find(c => c.dataset.value === value);
-                if (!target) return;
-                const isSelected = target.classList.toggle('selected');
-                // if any specific selected, unselect Todos
-                if (allChip) allChip.classList.remove('selected');
-                // if none selected, re-select Todos
-                const anySelected = chips.some(c => c.dataset.value !== '' && c.classList.contains('selected'));
-                if (!anySelected) { if (allChip) allChip.classList.add('selected'); document.getElementById('filterGenderHidden').value = ''; }
-                else {
-                    const selected = chips.filter(c => c.dataset.value !== '' && c.classList.contains('selected')).map(c=>c.dataset.value);
-                    document.getElementById('filterGenderHidden').value = selected.join('|');
-                }
-            }
-            // notify updates
-            renderTimeSeries();
-            handleFilterChange();
-        }
-
-        function getSelectedGenres() {
-            const container = document.getElementById('filterGenderChips');
-            if (!container) return [];
-            const chips = Array.from(container.querySelectorAll('.chip'));
-            const allChip = chips.find(c => c.dataset.value === '');
-            if (allChip && allChip.classList.contains('selected')) return [];
-            return chips.filter(c => c.dataset.value !== '' && c.classList.contains('selected')).map(c => c.dataset.value);
+        function refreshFilterOptions(currentFilters) {
+            if (filters.dep) filters.dep.populate(rawData, currentFilters);
+            if (filters.mun) filters.mun.populate(rawData, currentFilters);
+            if (filters.tema) filters.tema.populate(rawData, currentFilters);
+            if (filters.gender) filters.gender.populate(rawData, currentFilters);
         }
 
         function normalizeRow(row) {
@@ -857,7 +968,6 @@
             const grain = prefix === 'main' ? document.getElementById('timeGrain').value : document.getElementById('compTimeGrain').value;
             let startVal = document.getElementById(`${prefix}Start`)?.value;
             let endVal = document.getElementById(`${prefix}End`)?.value;
-            // support quarter UI where start is split into Year + Quarter
             const yearEl = document.getElementById(`${prefix}StartYear`);
             const qEl = document.getElementById(`${prefix}StartQuarter`);
             if (yearEl && qEl) startVal = `${yearEl.value}-${qEl.value}`;
@@ -866,18 +976,17 @@
                 grain,
                 start: startVal,
                 end: endVal,
-                dep: document.getElementById('filterDep').value,
-                mun: document.getElementById('filterMun').value,
-                tema: document.getElementById('filterTema').value
+                dep: filters.dep ? filters.dep.selected : [],
+                mun: filters.mun ? filters.mun.selected : [],
+                tema: filters.tema ? filters.tema.selected : [],
+                gender: filters.gender ? filters.gender.selected : []
             };
         }
 
         function getComparisonState(which) {
-            // which: 'A' or 'B'
             const grain = document.getElementById('compTimeGrain').value;
             let startVal = document.getElementById(`comp${which}Start`)?.value;
             let endVal = document.getElementById(`comp${which}End`)?.value;
-            // quarter inputs for comps
             const yearEl = document.getElementById(`comp${which}StartYear`);
             const qEl = document.getElementById(`comp${which}StartQuarter`);
             if (yearEl && qEl) startVal = `${yearEl.value}-${qEl.value}`;
@@ -885,15 +994,15 @@
                 grain,
                 start: startVal,
                 end: endVal,
-                dep: document.getElementById('filterDep').value,
-                mun: document.getElementById('filterMun').value,
-                tema: document.getElementById('filterTema').value
+                dep: filters.dep ? filters.dep.selected : [],
+                mun: filters.mun ? filters.mun.selected : [],
+                tema: filters.tema ? filters.tema.selected : [],
+                gender: filters.gender ? filters.gender.selected : []
             };
         }
 
         function parseDate(dateStr) {
             if (!dateStr) return null;
-            // Accept ISO yyyy-mm-dd as well
             if (dateStr.includes('-')) {
                 const d = new Date(dateStr);
                 if (!isNaN(d)) return d;
@@ -914,6 +1023,7 @@
 
                 let inDate = true;
                 if (state.grain === 'day') {
+                    if (!state.start) return true;
                     const d = new Date(state.start);
                     inDate = rDate.toDateString() === d.toDateString();
                 } else if (state.grain === 'month') {
@@ -921,40 +1031,41 @@
                     const [y, m] = state.start.split('-').map(Number);
                     inDate = rDate.getFullYear() === y && (rDate.getMonth() + 1) === m;
                 } else if (state.grain === 'year') {
+                    if (!state.start) return true;
                     inDate = rDate.getFullYear() === parseInt(state.start);
                 } else if (state.grain === 'quarter') {
-                    // state.start expected as 'YYYY-Qn'
                     if (!state.start) return true;
                     const parts = (state.start || '').split('-Q');
                     if (parts.length !== 2) return true;
                     const y = parseInt(parts[0], 10);
                     const q = parseInt(parts[1].replace('Q',''), 10);
                     if (!y || !q) return true;
-                    const startMonth = (q - 1) * 3; // 0-based month
+                    const startMonth = (q - 1) * 3; 
                     const s = new Date(y, startMonth, 1);
-                    const e = new Date(y, startMonth + 3, 0); // last day of quarter
+                    const e = new Date(y, startMonth + 3, 0); 
                     inDate = rDate >= s && rDate <= e;
                 } else {
                     const s = new Date(state.start); const e = new Date(state.end);
                     inDate = (!state.start || rDate >= s) && (!state.end || rDate <= e);
                 }
 
-                const inDep = !state.dep || r.Dependencia === state.dep;
-                const inMun = !state.mun || r.Municipio === state.mun;
-                const inTema = !state.tema || r.Tema === state.tema;
-                return inDate && inDep && inMun && inTema;
+                const inDep = !state.dep || state.dep.length === 0 || state.dep.includes(r.Dependencia);
+                const inMun = !state.mun || state.mun.length === 0 || state.mun.includes(r.Municipio);
+                const inTema = !state.tema || state.tema.length === 0 || state.tema.includes(r.Tema);
+                const inGender = !state.gender || state.gender.length === 0 || state.gender.includes(r.Género);
+                
+                return inDate && inDep && inMun && inTema && inGender;
             });
         }
 
-        function updateDashboard(filters) {
-            updateKPIs(filters);
+        function updateDashboard(filtersObj) {
+            updateKPIs(filtersObj);
             renderTimeSeries();
-            renderStackedBar('chartDependencia', 'Dependencia', 'topDepsCount', filters);
-            renderStackedBar('chartMunicipio', 'Municipio', 'topMunsCount', filters);
-            renderStackedBar('chartTema', 'Tema', 'topTemasCount', filters);
+            renderStackedBar('chartDependencia', 'Dependencia', 'topDepsCount', filtersObj);
+            renderStackedBar('chartMunicipio', 'Municipio', 'topMunsCount', filtersObj);
+            renderStackedBar('chartTema', 'Tema', 'topTemasCount', filtersObj);
             updateFichas();
-            // Refresh filter option availability after update
-            refreshFilterOptions(filters);
+            refreshFilterOptions(filtersObj);
         }
 
         function updateKPIs(filters) {
@@ -985,9 +1096,11 @@
             }
 
             const filterDesc = [];
-            if (filters.dep) filterDesc.push(`Dep: ${filters.dep}`);
-            if (filters.mun) filterDesc.push(`Mun: ${filters.mun}`);
-            if (filters.tema) filterDesc.push(`Tema: ${filters.tema}`);
+            if (filtersObj.dep.length > 0) filterDesc.push(`Dep: ${filtersObj.dep.length} sel.`);
+            if (filtersObj.mun.length > 0) filterDesc.push(`Mun: ${filtersObj.mun.length} sel.`);
+            if (filtersObj.tema.length > 0) filterDesc.push(`Tema: ${filtersObj.tema.length} sel.`);
+            if (filtersObj.gender.length > 0) filterDesc.push(`Género: ${filtersObj.gender.length} sel.`);
+            
             const desc = filterDesc.length > 0 ? filterDesc.join(' | ') : 'Sin filtros activos';
             ['total', 'boletin', 'fotonota', 'muns', 'locs'].forEach(id => document.getElementById(`filters-${id}`).textContent = desc);
 
@@ -1060,9 +1173,9 @@
         function renderStackedBar(canvasId, field, topId, filters) {
             const chartFilters = { ...filters };
             // Ignore own category filter for the chart contents
-            if (field === 'Dependencia') chartFilters.dep = "";
-            if (field === 'Municipio') chartFilters.mun = "";
-            if (field === 'Tema') chartFilters.tema = "";
+            if (field === 'Dependencia') chartFilters.dep = [];
+            if (field === 'Municipio') chartFilters.mun = [];
+            if (field === 'Tema') chartFilters.tema = [];
 
             const dataToUse = filterByState(rawData, chartFilters);
 
@@ -1131,11 +1244,11 @@
 
         function resetFilters() {
             document.getElementById('timeGrain').value = 'month';
-            document.getElementById('filterDep').value = '';
-            document.getElementById('filterMun').value = '';
-            document.getElementById('filterTema').value = '';
-            const chips = document.getElementById('filterGenderChips');
-            if (chips) { Array.from(chips.querySelectorAll('.chip')).forEach(c => c.classList.remove('selected')); const all = chips.querySelector('.chip'); if (all) all.classList.add('selected'); document.getElementById('filterGenderHidden').value = ''; }
+            if (filters.dep) filters.dep.reset();
+            if (filters.mun) filters.mun.reset();
+            if (filters.tema) filters.tema.reset();
+            if (filters.gender) filters.gender.reset();
+            
             document.getElementById('enableComparison').checked = false;
             document.getElementById('compDateGroup').style.display = 'none';
             document.getElementById('compGrainGroup').style.display = 'none';
@@ -1143,6 +1256,13 @@
             // clear comp inputs if present
             ['compAStart','compAEnd','compBStart','compBEnd','compAStartYear','compAStartQuarter','compBStartYear','compBStartQuarter'].forEach(id=>{ const el=document.getElementById(id); if(el) { if(el.tagName==='SELECT') el.selectedIndex=0; else el.value=''; }});
             updateDateInputs('main');
+            
+            // Re-render filters to show "Todos" state
+            if (filters.dep) filters.dep.render();
+            if (filters.mun) filters.mun.render();
+            if (filters.tema) filters.tema.render();
+            if (filters.gender) filters.gender.render();
+            
             handleFilterChange();
         }
 
@@ -1212,12 +1332,8 @@
         }
 
         function renderTimeSeries() {
-            const filters = getFilterState('main');
-            let data = filterByState(rawData, filters);
-
-            // apply genre chips filter (serie)
-            const selEffective = getSelectedGenres();
-            if (selEffective && selEffective.length) data = data.filter(r => selEffective.includes(r.Género));
+            const filtersState = getFilterState('main');
+            let data = filterByState(rawData, filtersState);
 
             const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
             const groups = {};
