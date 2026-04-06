@@ -122,10 +122,12 @@
         }
 
         .kpi-card .value {
-            font-size: clamp(1.2rem, 3vw, 2.5rem);
+            font-size: clamp(1.8rem, 4vw, 3rem);
             font-weight: 700;
             color: var(--primary);
-            line-height: 1;
+            line-height: 1.1;
+            word-break: break-word;
+            width: 100%;
         }
 
         .kpi-card .label {
@@ -184,7 +186,11 @@
             gap: 0.35rem;
         }
 
-        .filters-bar label { font-weight: 600; color: var(--text-muted); font-size: 0.85rem; }
+        .filters-bar label {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
 
         /* Custom Multi-select Dropdown Styles */
         .custom-select-container {
@@ -228,7 +234,7 @@
             border: 1px solid var(--border);
             border-top: none;
             border-radius: 0 0 8px 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             z-index: 1000;
             display: none;
             flex-direction: column;
@@ -308,9 +314,19 @@
             cursor: pointer;
         }
 
-        .comparison-section { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 0.5rem; }
+        .comparison-section {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
 
-        .comparison-section .comparison-toggle { display:flex; gap:0.5rem; align-items:center; font-weight:700; }
+        .comparison-section .comparison-toggle {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            font-weight: 700;
+        }
 
         .top-selector select {
             padding: 0.2rem;
@@ -372,7 +388,7 @@
             background: linear-gradient(180deg, #fff 0%, #fbf7f4 100%);
             border-radius: 10px;
             padding: 1rem;
-            box-shadow: 0 6px 18px rgba(53,12,25,0.06);
+            box-shadow: 0 6px 18px rgba(53, 12, 25, 0.06);
             border-left: 4px solid var(--accent1);
             display: flex;
             flex-direction: column;
@@ -389,7 +405,10 @@
             text-overflow: ellipsis;
         }
 
-        .ficha-meta { font-size: 0.85rem; color: var(--text-muted); }
+        .ficha-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
 
         .section-header {
             background: var(--header-bg);
@@ -494,7 +513,8 @@
                 <div class="custom-select-container" id="containerDep">
                     <div class="select-button" id="btnDep">Todas</div>
                     <div class="select-menu" id="menuDep">
-                        <div class="search-box"><input type="text" placeholder="Buscar..." onkeyup="filterOptions(this)"></div>
+                        <div class="search-box"><input type="text" placeholder="Buscar..."
+                                onkeyup="filterOptions(this)"></div>
                         <div class="options-container" id="optsDep"></div>
                     </div>
                 </div>
@@ -505,7 +525,8 @@
                 <div class="custom-select-container" id="containerMun">
                     <div class="select-button" id="btnMun">Todos</div>
                     <div class="select-menu" id="menuMun">
-                        <div class="search-box"><input type="text" placeholder="Buscar..." onkeyup="filterOptions(this)"></div>
+                        <div class="search-box"><input type="text" placeholder="Buscar..."
+                                onkeyup="filterOptions(this)"></div>
                         <div class="options-container" id="optsMun"></div>
                     </div>
                 </div>
@@ -516,7 +537,8 @@
                 <div class="custom-select-container" id="containerTema">
                     <div class="select-button" id="btnTema">Todos</div>
                     <div class="select-menu" id="menuTema">
-                        <div class="search-box"><input type="text" placeholder="Buscar..." onkeyup="filterOptions(this)"></div>
+                        <div class="search-box"><input type="text" placeholder="Buscar..."
+                                onkeyup="filterOptions(this)"></div>
                         <div class="options-container" id="optsTema"></div>
                     </div>
                 </div>
@@ -527,7 +549,8 @@
                 <div class="custom-select-container" id="containerGender">
                     <div class="select-button" id="btnGender">Todos</div>
                     <div class="select-menu" id="menuGender">
-                        <div class="search-box"><input type="text" placeholder="Buscar..." onkeyup="filterOptions(this)"></div>
+                        <div class="search-box"><input type="text" placeholder="Buscar..."
+                                onkeyup="filterOptions(this)"></div>
                         <div class="options-container" id="optsGender"></div>
                     </div>
                 </div>
@@ -558,12 +581,13 @@
                 </div>
             </div>
             <div style="display:flex; align-items:center; gap:0.5rem;">
-                <button id="clearFilters" class="btn btn-secondary" onclick="resetFilters()"><i class="fas fa-eraser"></i> Limpiar filtros</button>
+                <button id="clearFilters" class="btn btn-secondary" onclick="resetFilters()"><i
+                        class="fas fa-eraser"></i> Limpiar filtros</button>
             </div>
         </div>
 
-        <div class="kpi-grid">
-            <div class="kpi-card">
+        <div class="kpi-grid" id="kpiGridContainer">
+            <div class="kpi-card" id="card-total">
                 <i class="fas fa-shopping-bag"></i>
                 <div class="value" id="kpi-total">-</div>
                 <div class="label">TOTAL DE PRODUCTOS</div>
@@ -574,23 +598,7 @@
                 <div class="active-filters-info" id="filters-total"></div>
             </div>
 
-            <div class="kpi-card" style="border-color: #350c19;">
-                <i class="fas fa-newspaper"></i>
-                <div class="value" id="kpi-boletin">-</div>
-                <div class="label">BOLETÍN</div>
-                <div id="comp-boletin" style="font-size: 0.8rem; font-weight: 600;"></div>
-                <div class="active-filters-info" id="filters-boletin"></div>
-            </div>
-
-            <div class="kpi-card" style="border-color: #ab8345;">
-                <i class="fas fa-camera"></i>
-                <div class="value" id="kpi-fotonota">-</div>
-                <div class="label">FOTONOTA</div>
-                <div id="comp-fotonota" style="font-size: 0.8rem; font-weight: 600;"></div>
-                <div class="active-filters-info" id="filters-fotonota"></div>
-            </div>
-
-            <div class="kpi-card" style="border-color: var(--accent1);">
+            <div class="kpi-card" id="card-muns" style="border-color: var(--accent1);">
                 <i class="fas fa-map-marker-alt"></i>
                 <div class="value" id="kpi-muns">-</div>
                 <div class="label">MUNICIPIOS</div>
@@ -598,7 +606,7 @@
                 <div class="active-filters-info" id="filters-muns"></div>
             </div>
 
-            <div class="kpi-card" style="border-color: var(--accent2);">
+            <div class="kpi-card" id="card-locs" style="border-color: var(--accent2);">
                 <i class="fas fa-map-pin"></i>
                 <div class="value" id="kpi-locs">-</div>
                 <div class="label">LOCALIDADES</div>
@@ -814,7 +822,7 @@
             try {
                 const logoEl = document.getElementById('siteLogo');
                 if (logoEl) {
-                    fetch(logoEl.src, { method: 'HEAD' }).then(r => { if (!r.ok) logoEl.style.display = 'none'; }).catch(()=>{ logoEl.style.display = 'none'; });
+                    fetch(logoEl.src, { method: 'HEAD' }).then(r => { if (!r.ok) logoEl.style.display = 'none'; }).catch(() => { logoEl.style.display = 'none'; });
                 }
                 const loader = document.getElementById('loadingOverlay');
                 const resp = await fetch(SHEET_CSV_URL);
@@ -916,23 +924,25 @@
         function normalizeRow(row) {
             // Trim all string fields and normalize common inconsistencies
             const out = {};
-            Object.entries(row).forEach(([k,v]) => {
-                const key = k?.trim();
+            Object.entries(row).forEach(([k, v]) => {
+                const key = k ? k.replace(/^\uFEFF/, '').trim() : '';
                 let val = (typeof v === 'string') ? v.trim() : v;
                 if (typeof val === 'string' && val.toUpperCase() === 'N/A') val = '';
-                out[key] = val;
+                if (key) out[key] = val;
             });
 
             // Normalize Género values into common buckets when possible
+            if (out['Genero'] && !out['Género']) out['Género'] = out['Genero'];
             if (out['Género']) {
                 const g = out['Género'].toLowerCase();
-                if (g.includes('foton') || g.includes('pie de foto') || g === 'pie de foto' || g.includes('pie')) out['Género'] = 'Fotonota';
+                if (g.includes('foton')) out['Género'] = 'Fotonota';
+                else if (g.includes('pie de foto') || g === 'pie de foto' || g.includes('pie')) out['Género'] = 'Pie de foto';
                 else if (g.includes('bolet')) out['Género'] = 'Boletín';
                 else if (g.includes('tarjeta')) out['Género'] = 'Tarjeta Informativa';
                 else if (g.includes('comunicado conjunto')) out['Género'] = 'Comunicado conjunto';
                 else if (g.includes('comunicado')) out['Género'] = 'Comunicado';
                 else if (g.includes('nota') && !g.includes('foton')) out['Género'] = 'Nota';
-                else out['Género'] = out['Género'];
+                else out['Género'] = out['Género'].charAt(0).toUpperCase() + out['Género'].slice(1);
             }
 
             // Ensure Fecha is trimmed
@@ -1003,6 +1013,7 @@
 
         function parseDate(dateStr) {
             if (!dateStr) return null;
+            // Accept ISO yyyy-mm-dd as well
             if (dateStr.includes('-')) {
                 const d = new Date(dateStr);
                 if (!isNaN(d)) return d;
@@ -1023,7 +1034,6 @@
 
                 let inDate = true;
                 if (state.grain === 'day') {
-                    if (!state.start) return true;
                     const d = new Date(state.start);
                     inDate = rDate.toDateString() === d.toDateString();
                 } else if (state.grain === 'month') {
@@ -1038,22 +1048,24 @@
                     const parts = (state.start || '').split('-Q');
                     if (parts.length !== 2) return true;
                     const y = parseInt(parts[0], 10);
-                    const q = parseInt(parts[1].replace('Q',''), 10);
+                    const q = parseInt(parts[1].replace('Q', ''), 10);
                     if (!y || !q) return true;
-                    const startMonth = (q - 1) * 3; 
+                    const startMonth = (q - 1) * 3;
                     const s = new Date(y, startMonth, 1);
-                    const e = new Date(y, startMonth + 3, 0); 
+                    const e = new Date(y, startMonth + 3, 0);
                     inDate = rDate >= s && rDate <= e;
                 } else {
-                    const s = new Date(state.start); const e = new Date(state.end);
-                    inDate = (!state.start || rDate >= s) && (!state.end || rDate <= e);
+                    const s = parseDate(state.start);
+                    const e = parseDate(state.end);
+                    if (e) e.setHours(23, 59, 59); // make end inclusive
+                    inDate = (!s || rDate >= s) && (!e || rDate <= e);
                 }
 
                 const inDep = !state.dep || state.dep.length === 0 || state.dep.includes(r.Dependencia);
                 const inMun = !state.mun || state.mun.length === 0 || state.mun.includes(r.Municipio);
                 const inTema = !state.tema || state.tema.length === 0 || state.tema.includes(r.Tema);
                 const inGender = !state.gender || state.gender.length === 0 || state.gender.includes(r.Género);
-                
+
                 return inDate && inDep && inMun && inTema && inGender;
             });
         }
@@ -1076,23 +1088,20 @@
             document.getElementById('kpi-locs').textContent = unique(filteredData, 'Localidad');
 
             // Breakdown counts por género
-            const genderCounts = { 'Boletín': 0, 'Fotonota': 0 };
-            filteredData.forEach(r => { if (genderCounts[r.Género] !== undefined) genderCounts[r.Género]++; });
-
-            document.getElementById('kpi-boletin').textContent = genderCounts['Boletín'] || 0;
-            document.getElementById('kpi-fotonota').textContent = genderCounts['Fotonota'] || 0;
+            const genderCounts = {};
+            const uniqueGenders = new Set([...rawData.map(r => r.Género).filter(g => g && g !== 'N/A')]);
+            uniqueGenders.forEach(g => { genderCounts[g] = 0; });
+            filteredData.forEach(r => { if (r.Género && genderCounts[r.Género] !== undefined) genderCounts[r.Género]++; });
 
             // Mantener breakdown pequeño dentro de Total
             updateGenderBreakdown('kpi-gender-total', filteredData);
 
             if (comparisonData.length > 0) {
                 updateCompBadge('comp-total', filteredData.length, comparisonData.length);
-                updateCompBadge('comp-boletin', genderCounts['Boletín'] || 0, comparisonData.filter(r => r.Género === 'Boletín').length);
-                updateCompBadge('comp-fotonota', genderCounts['Fotonota'] || 0, comparisonData.filter(r => r.Género === 'Fotonota').length);
                 updateCompBadge('comp-muns', unique(filteredData, 'Municipio'), unique(comparisonData, 'Municipio'));
                 updateCompBadge('comp-locs', unique(filteredData, 'Localidad'), unique(comparisonData, 'Localidad'));
             } else {
-                ['comp-total', 'comp-boletin', 'comp-fotonota', 'comp-muns', 'comp-locs'].forEach(id => document.getElementById(id).innerHTML = '');
+                ['comp-total', 'comp-muns', 'comp-locs'].forEach(id => document.getElementById(id).innerHTML = '');
             }
 
             const filterDesc = [];
@@ -1100,44 +1109,49 @@
             if (filtersObj.mun.length > 0) filterDesc.push(`Mun: ${filtersObj.mun.length} sel.`);
             if (filtersObj.tema.length > 0) filterDesc.push(`Tema: ${filtersObj.tema.length} sel.`);
             if (filtersObj.gender.length > 0) filterDesc.push(`Género: ${filtersObj.gender.length} sel.`);
-            
+
             const desc = filterDesc.length > 0 ? filterDesc.join(' | ') : 'Sin filtros activos';
-            ['total', 'boletin', 'fotonota', 'muns', 'locs'].forEach(id => document.getElementById(`filters-${id}`).textContent = desc);
+            ['total', 'muns', 'locs'].forEach(id => document.getElementById(`filters-${id}`).textContent = desc);
 
-            // Ajustar tamaño visual de KPIs según magnitud relativa
-            const valuesMap = {
-                'kpi-total': filteredData.length,
-                'kpi-boletin': genderCounts['Boletín'] || 0,
-                'kpi-fotonota': genderCounts['Fotonota'] || 0,
-                'kpi-muns': unique(filteredData, 'Municipio'),
-                'kpi-locs': unique(filteredData, 'Localidad')
-            };
-            const maxVal = Math.max(...Object.values(valuesMap), 1);
-            Object.entries(valuesMap).forEach(([id, val]) => {
-                const el = document.getElementById(id);
-                if (!el) return;
-                const scale = 0.8 + (val / maxVal) * 0.8; // between 0.8 and 1.6
-                el.style.fontSize = `${(1.6 * scale).toFixed(2)}rem`;
-            });
+            // Append dynamic gender cards
+            const grid = document.getElementById('kpiGridContainer');
 
-            // Also adjust to avoid overflow/overlap
-            adjustKpiSizes(Object.keys(valuesMap));
-        }
+            // Remove previously added dynamic cards
+            const dynamicCards = grid.querySelectorAll('.dynamic-card');
+            dynamicCards.forEach(card => card.remove());
 
-        function adjustKpiSizes(ids) {
-            ids.forEach(id => {
-                const el = document.getElementById(id);
-                if (!el) return;
-                // start from current font size and shrink until fits
-                let fs = parseFloat(window.getComputedStyle(el).fontSize);
-                const container = el.parentElement;
-                if (!container) return;
-                // allow up to 6 iterations
-                for (let i = 0; i < 6; i++) {
-                    // if text fits horizontally, break
-                    if (el.scrollWidth <= container.clientWidth * 0.95) break;
-                    fs = Math.max(10, fs * 0.85);
-                    el.style.fontSize = fs + 'px';
+            // Add dynamic cards based on active genres sorted by count
+            const sortedGenders = Object.keys(genderCounts).sort((a, b) => genderCounts[b] - genderCounts[a]);
+            const colorPalette = ['#350c19', '#ab8345', '#6b7280', '#10b981', '#3b82f6'];
+
+            sortedGenders.forEach((gender, index) => {
+                const count = genderCounts[gender];
+                if (count === 0 && !getFilterState('main').start && !getFilterState('main').dep) return; // Skip 0s unless deeply filtering
+
+                const card = document.createElement('div');
+                card.className = 'kpi-card dynamic-card';
+                card.style.borderColor = colorPalette[index % colorPalette.length];
+
+                let iconClass = 'fas fa-file-alt'; // default
+                if (gender === 'Fotonota' || gender === 'Pie de foto') iconClass = 'fas fa-camera';
+                if (gender === 'Boletín') iconClass = 'fas fa-newspaper';
+
+                let compBadgeId = `comp-dyn-${index}`;
+
+                card.innerHTML = `
+                    <i class="${iconClass}"></i>
+                    <div class="value">${count}</div>
+                    <div class="label" style="word-break: break-word">${gender.toUpperCase()}</div>
+                    <div id="${compBadgeId}" style="font-size: 0.8rem; font-weight: 600; margin-top:0.25rem;"></div>
+                    <div class="active-filters-info">${desc}</div>
+                `;
+
+                // Insert after total before muns/locs
+                grid.insertBefore(card, document.getElementById('card-muns'));
+
+                if (comparisonData.length > 0) {
+                    const compCount = comparisonData.filter(r => r.Género === gender).length;
+                    updateCompBadge(compBadgeId, count, compCount);
                 }
             });
         }
@@ -1182,7 +1196,7 @@
             const counts = {};
             const gendersSet = new Set();
             dataToUse.forEach(r => { if (r.Género) gendersSet.add(r.Género); });
-            const genders = Array.from(gendersSet.length ? gendersSet : ['Boletín','Fotonota']);
+            const genders = Array.from(gendersSet.size ? gendersSet : ['Boletín', 'Fotonota']);
 
             dataToUse.forEach(r => {
                 const val = r[field] || 'N/A';
@@ -1204,7 +1218,7 @@
 
             if (charts[canvasId]) charts[canvasId].destroy();
 
-            const colorPalette = ['#350c19','#ab8345','#6b7280','#10b981','#3b82f6'];
+            const colorPalette = ['#350c19', '#ab8345', '#6b7280', '#10b981', '#3b82f6'];
             const datasets = genders.map((g, idx) => ({ label: g, data: sortedKeys.map(k => counts[k][g] || 0), backgroundColor: colorPalette[idx % colorPalette.length] }));
 
             charts[canvasId] = new Chart(document.getElementById(canvasId), {
@@ -1248,72 +1262,64 @@
             if (filters.mun) filters.mun.reset();
             if (filters.tema) filters.tema.reset();
             if (filters.gender) filters.gender.reset();
-            
+
             document.getElementById('enableComparison').checked = false;
             document.getElementById('compDateGroup').style.display = 'none';
             document.getElementById('compGrainGroup').style.display = 'none';
             comparisonDataA = []; comparisonDataB = []; comparisonData = [];
             // clear comp inputs if present
-            ['compAStart','compAEnd','compBStart','compBEnd','compAStartYear','compAStartQuarter','compBStartYear','compBStartQuarter'].forEach(id=>{ const el=document.getElementById(id); if(el) { if(el.tagName==='SELECT') el.selectedIndex=0; else el.value=''; }});
+            ['compAStart', 'compAEnd', 'compBStart', 'compBEnd', 'compAStartYear', 'compAStartQuarter', 'compBStartYear', 'compBStartQuarter'].forEach(id => { const el = document.getElementById(id); if (el) { if (el.tagName === 'SELECT') el.selectedIndex = 0; else el.value = ''; } });
             updateDateInputs('main');
-            
+
             // Re-render filters to show "Todos" state
             if (filters.dep) filters.dep.render();
             if (filters.mun) filters.mun.render();
             if (filters.tema) filters.tema.render();
             if (filters.gender) filters.gender.render();
-            
+
             handleFilterChange();
         }
 
-        function renderComparison(filters, baseKeys) {
-            // baseKeys: array of keys used by time series grouping (optional)
-            // Build groups for current and comparison using same grouping logic as renderTimeSeries
-            const buildGroups = (data) => {
-                const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+        function renderComparison(filters) {
+            const compGrain = document.getElementById('compTimeGrain')?.value || 'month';
+
+            const buildAlignedGroups = (data) => {
                 const groups = {};
                 data.forEach(r => {
                     const d = parseDate(r.Fecha);
                     if (!d) return;
                     let key = '';
-                    if (!filters.start && !filters.dep && !filters.mun && !filters.tema) {
-                        key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-                    } else if (filters.grain === 'year') {
-                        key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-                    } else if (filters.grain === 'month') {
+
+                    if (compGrain === 'year') {
+                        key = String(d.getMonth() + 1).padStart(2, '0');
+                    } else if (compGrain === 'quarter') {
+                        key = 'Mes ' + ((d.getMonth() % 3) + 1);
+                    } else if (compGrain === 'month') {
                         const week = Math.ceil(d.getDate() / 7);
-                        key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-W${week}`;
-                    } else if (filters.grain === 'quarter') {
-                        const quarter = Math.floor(d.getMonth() / 3) + 1;
-                        key = `${d.getFullYear()}-Q${quarter}`;
-                    } else if (filters.grain === 'day') {
-                        key = d.toISOString().slice(0,10);
-                    } else {
-                        key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                        key = 'Semana ' + week;
+                    } else if (compGrain === 'day') {
+                        key = 'Día completo';
+                    } else { // range
+                        key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
                     }
+
                     if (!groups[key]) groups[key] = 0;
                     groups[key]++;
                 });
                 return groups;
             };
 
-            // Compare Period A vs Period B (both come from comparisonDataA/B)
-            const mainGroups = buildGroups(comparisonDataA || []);
-            const compGroups = buildGroups(comparisonDataB || []);
+            const mainGroups = buildAlignedGroups(comparisonDataA || []);
+            const compGroups = buildAlignedGroups(comparisonDataB || []);
 
-            // Determine labels order: derive from keys present in comp groups A and B (only selected periods)
-            let keys = Object.keys({...mainGroups, ...compGroups});
-            if (!keys.length) keys = Object.keys({...mainGroups, ...compGroups});
-            // ensure unique and sorted
-            keys = [...new Set(keys)];
-            keys.sort((a,b)=> a.localeCompare(b, undefined, {numeric:true}));
+            let keys = [...new Set([...Object.keys(mainGroups), ...Object.keys(compGroups)])];
+            keys.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 
+            const monthsNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
             const labels = keys.map(k => {
-                // friendly label
-                if (/^\d{4}-\d{2}-W\d+$/.test(k)) return `Semana ${k.split('-W')[1]}`;
-                if (/^\d{4}-Q\d+$/.test(k)) { const [y,q] = k.split('-Q'); return `Q${q} ${y}`; }
-                if (/^\d{4}-\d{2}$/.test(k)) { const [y,m] = k.split('-'); return `${months[parseInt(m,10)-1]} ${y}`; }
-                if (/^\d{4}-\d{2}-\d{2}$/.test(k)) return k;
+                if (compGrain === 'year' && /^\d{2}$/.test(k)) {
+                    return monthsNames[parseInt(k, 10) - 1];
+                }
                 return k;
             });
 
@@ -1323,10 +1329,12 @@
             if (charts['chartComparison']) charts['chartComparison'].destroy();
             charts['chartComparison'] = new Chart(document.getElementById('chartComparison'), {
                 type: 'bar',
-                data: { labels, datasets: [
-                    { label: 'Periodo actual', data: mainData, backgroundColor: '#350c19' },
-                    { label: 'Periodo comparación', data: compData, backgroundColor: '#ab8345' }
-                ] },
+                data: {
+                    labels, datasets: [
+                        { label: 'Periodo A', data: mainData, backgroundColor: '#350c19' },
+                        { label: 'Periodo B', data: compData, backgroundColor: '#ab8345' }
+                    ]
+                },
                 options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true } } }
             });
         }
@@ -1335,7 +1343,7 @@
             const filtersState = getFilterState('main');
             let data = filterByState(rawData, filtersState);
 
-            const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+            const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
             const groups = {};
 
             // Decide agrupación más dinámica según temporalidad
@@ -1347,26 +1355,26 @@
 
                 if (!filters.start && !filters.dep && !filters.mun && !filters.tema) {
                     // sin filtros: agrupar por mes-año
-                    key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                    key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
                     label = `${months[d.getMonth()]} ${d.getFullYear()}`;
                 } else if (filters.grain === 'year') {
                     // show months of that year (use YYYY-MM key)
-                    key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                    key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
                     label = months[d.getMonth()];
                 } else if (filters.grain === 'month') {
                     // group by week number within month, include year-month for uniqueness
                     const week = Math.ceil(d.getDate() / 7);
-                    key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-W${week}`;
+                    key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-W${week}`;
                     label = `Semana ${week}`;
                 } else if (filters.grain === 'quarter') {
                     const quarter = Math.floor(d.getMonth() / 3) + 1;
                     key = `${d.getFullYear()}-Q${quarter}`;
                     label = `Q${quarter} ${d.getFullYear()}`;
                 } else if (filters.grain === 'day') {
-                    key = d.toISOString().slice(0,10);
+                    key = d.toISOString().slice(0, 10);
                     label = key;
                 } else {
-                    key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                    key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
                     label = `${months[d.getMonth()]} ${d.getFullYear()}`;
                 }
 
@@ -1377,21 +1385,21 @@
             // Build ordered labels
             let entries = Object.entries(groups);
             // Sort intelligently
-            entries.sort((a,b)=>{
+            entries.sort((a, b) => {
                 const ka = a[0], kb = b[0];
                 // ISO date
                 if (/^\d{4}-\d{2}-\d{2}$/.test(ka) || /^\d{4}-\d{2}-\d{2}$/.test(kb)) return ka.localeCompare(kb);
                 // week keys YYYY-MM-Wn
-                if (/^\d{4}-\d{2}-W\d+$/.test(ka) || /^\d{4}-\d{2}-W\d+$/.test(kb)) return ka.localeCompare(kb, undefined, {numeric:true});
+                if (/^\d{4}-\d{2}-W\d+$/.test(ka) || /^\d{4}-\d{2}-W\d+$/.test(kb)) return ka.localeCompare(kb, undefined, { numeric: true });
                 // quarter keys YYYY-Qn
-                if (/^\d{4}-Q\d+$/.test(ka) || /^\d{4}-Q\d+$/.test(kb)) return ka.localeCompare(kb, undefined, {numeric:true});
+                if (/^\d{4}-Q\d+$/.test(ka) || /^\d{4}-Q\d+$/.test(kb)) return ka.localeCompare(kb, undefined, { numeric: true });
                 // month-year
                 if (/^\d{4}-\d{2}$/.test(ka) && /^\d{4}-\d{2}$/.test(kb)) return ka.localeCompare(kb);
-                return ka.localeCompare(kb, undefined, {numeric:true});
+                return ka.localeCompare(kb, undefined, { numeric: true });
             });
 
-            const labels = entries.map(e=>e[1].label);
-            const dataPoints = entries.map(e=>e[1].total);
+            const labels = entries.map(e => e[1].label);
+            const dataPoints = entries.map(e => e[1].total);
 
             if (charts['chartTimeSeries']) charts['chartTimeSeries'].destroy();
             charts['chartTimeSeries'] = new Chart(document.getElementById('chartTimeSeries'), {
@@ -1401,7 +1409,7 @@
             });
 
             // if comparison enabled and both A and B provided, render comparative columns
-            if (comparisonDataA && comparisonDataA.length > 0 && comparisonDataB && comparisonDataB.length > 0) renderComparison(filters, entries.map(e=>e[0]));
+            if (comparisonDataA && comparisonDataA.length > 0 && comparisonDataB && comparisonDataB.length > 0) renderComparison(filters);
         }
 
         function updateFichas() {
