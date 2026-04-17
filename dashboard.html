@@ -7,6 +7,8 @@
     <title>Dashboard Institucional - Análisis de Datos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
@@ -472,6 +474,70 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Dark Mode overrides */
+        body.dark-theme {
+            --bg-page: #1a0a0e;
+            --bg-card: #2d1b1f;
+            --bg-dark-accent: #351c22;
+            --primary: #ffbdc5; /* High contrast rose */
+            --secondary: #f2e0ce;
+            --accent1: #ab8345;
+            --accent2: #d4ac6e;
+            --text-main: #f9f1e8;
+            --text-muted: #ccbdae;
+            --border: #4a2a2e;
+            --shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
+            --header-bg: #120408;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+        }
+
+        body.dark-theme .kpi-card i,
+        body.dark-theme .kpi-card .value {
+            color: var(--primary);
+        }
+
+        body.dark-theme .kpi-card .label {
+            color: var(--accent2);
+        }
+
+        body.dark-theme header,
+        body.dark-theme section,
+        body.dark-theme .kpi-card,
+        body.dark-theme .select-menu {
+            background-color: var(--bg-card);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        body.dark-theme .select-button,
+        body.dark-theme .search-box input,
+        body.dark-theme select,
+        body.dark-theme input {
+            background-color: #351c22;
+            color: var(--text-main);
+            border-color: var(--border);
+        }
+        
+        body.dark-theme .option-item:hover {
+            background-color: #4a2a2e;
+        }
+
+        body.dark-theme .ficha {
+            background: linear-gradient(180deg, #351c22 0%, #2d1b1f 100%);
+            border-left-color: var(--accent2);
+        }
+
+        body.dark-theme #loadingOverlay {
+            background: rgba(26, 10, 14, 0.9);
+        }
+
+        #themeToggle {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            justify-content: center;
+        }
     </style>
 </head>
 
@@ -487,9 +553,14 @@
                 <img src="./logo.png" alt="Logo" id="siteLogo">
                 <h1>Datos de emisión</h1>
             </div>
-            <a href="index.html" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Volver a Captura
-            </a>
+            <div style="display:flex; gap:0.75rem; align-items:center;">
+                <button id="themeToggle" class="btn btn-secondary" onclick="toggleTheme()" title="Cambiar tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="index.html" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver a Captura
+                </a>
+            </div>
         </header>
 
         <div class="filters-bar" id="filtersBar">
@@ -817,6 +888,12 @@
 
         async function initDashboard() {
             try {
+                const savedTheme = localStorage.getItem('dashboard-theme');
+                if (savedTheme === 'dark') {
+                    document.body.classList.add('dark-theme');
+                    updateThemeUI(false); // don't refresh charts yet
+                }
+
                 const logoEl = document.getElementById('siteLogo');
                 if (logoEl) {
                     fetch(logoEl.src, { method: 'HEAD' }).then(r => { if (!r.ok) logoEl.style.display = 'none'; }).catch(() => { logoEl.style.display = 'none'; });
@@ -842,13 +919,6 @@
                 filters.gender.populate(rawData, {});
 
                 updateDateInputs('main');
-
-                const startInput = document.getElementById('mainStart');
-                if (startInput) {
-                    if (startInput.type === 'date') startInput.value = '2026-03-01';
-                    else if (startInput.type === 'month') startInput.value = '2026-03';
-                }
-
                 handleFilterChange();
             } catch (err) {
                 console.error('Error cargando CSV:', err);
@@ -964,9 +1034,16 @@
                 const compB = getComparisonState('B');
                 comparisonDataA = filterByState(rawData, compA);
                 comparisonDataB = filterByState(rawData, compB);
-                // for backward compat with badges, keep comparisonData as A
+                
+                // Switch perspective: The visual focus becomes Period B, 
+                // and we compare it against Period A.
+                filteredData = comparisonDataB;
                 comparisonData = comparisonDataA;
-            } else { comparisonData = []; comparisonDataA = []; comparisonDataB = []; }
+            } else { 
+                comparisonData = []; 
+                comparisonDataA = []; 
+                comparisonDataB = []; 
+            }
 
             updateDashboard(mainFilters);
         }
@@ -1316,6 +1393,59 @@
             handleFilterChange();
         }
 
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('dashboard-theme', isDark ? 'dark' : 'light');
+            updateThemeUI(true); // refresh charts
+        }
+
+        function updateThemeUI(refreshCharts) {
+            const isDark = document.body.classList.contains('dark-theme');
+            const icon = document.querySelector('#themeToggle i');
+            if (icon) {
+                icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+            }
+            
+            // Adjust Chart.js defaults
+            const textColor = isDark ? '#f9f1e8' : '#350c19';
+            const gridColor = isDark ? 'rgba(249, 241, 232, 0.1)' : 'rgba(171, 131, 69, 0.1)';
+            
+            Chart.defaults.color = textColor;
+            if (Chart.defaults.scale && Chart.defaults.scale.grid) {
+                Chart.defaults.scale.grid.color = gridColor;
+            } else {
+                // For Chart.js 3/4 common structures
+                Chart.defaults.borderColor = gridColor;
+            }
+            
+            if (refreshCharts && rawData.length > 0) handleFilterChange();
+        }
+
+        function getPeriodLabel(prefix) {
+            const grainEl = prefix === 'main' ? document.getElementById('timeGrain') : document.getElementById('compTimeGrain');
+            if (!grainEl) return 'Periodo';
+            const grain = grainEl.value;
+            const startVal = document.getElementById(`${prefix}Start`)?.value;
+            const endVal = document.getElementById(`${prefix}End`)?.value;
+            const yearEl = document.getElementById(`${prefix}StartYear`);
+            const qEl = document.getElementById(`${prefix}StartQuarter`);
+            const monthsNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+            if (grain === 'quarter' && yearEl && qEl) return `${qEl.value} ${yearEl.value}`;
+            if (!startVal) return 'Todo el tiempo';
+
+            if (grain === 'day') return startVal;
+            if (grain === 'month') {
+                const parts = startVal.split('-');
+                if (parts.length === 2) return `${monthsNames[parseInt(parts[1]) - 1]} ${parts[0]}`;
+                return startVal;
+            }
+            if (grain === 'year') return startVal;
+            if (grain === 'range') return `${startVal}${endVal ? ' al ' + endVal : ''}`;
+            return startVal;
+        }
+
         function renderComparison(filters) {
             const compGrain = document.getElementById('compTimeGrain')?.value || 'month';
 
@@ -1351,27 +1481,36 @@
             let keys = [...new Set([...Object.keys(mainGroups), ...Object.keys(compGroups)])];
             keys.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 
-            const monthsNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            const monthsNamesShort = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
             const labels = keys.map(k => {
                 if (compGrain === 'year' && /^\d{2}$/.test(k)) {
-                    return monthsNames[parseInt(k, 10) - 1];
+                    return monthsNamesShort[parseInt(k, 10) - 1];
                 }
                 return k;
             });
 
-            const mainData = keys.map(k => mainGroups[k] || 0);
-            const compData = keys.map(k => compGroups[k] || 0);
+            const labelA = getPeriodLabel('compA');
+            const labelB = getPeriodLabel('compB');
+
+            const datasets = [
+                { label: labelA, data: keys.map(k => mainGroups[k] || 0), backgroundColor: '#350c19' },
+                { label: labelB, data: keys.map(k => compGroups[k] || 0), backgroundColor: '#ab8345' }
+            ];
 
             if (charts['chartComparison']) charts['chartComparison'].destroy();
             charts['chartComparison'] = new Chart(document.getElementById('chartComparison'), {
                 type: 'bar',
-                data: {
-                    labels, datasets: [
-                        { label: 'Periodo A', data: mainData, backgroundColor: '#350c19' },
-                        { label: 'Periodo B', data: compData, backgroundColor: '#ab8345' }
-                    ]
-                },
-                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true } } }
+                data: { labels, datasets },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } }
+                    },
+                    scales: {
+                        y: { beginAtZero: true },
+                        x: { stacked: false } 
+                    }
+                }
             });
         }
 
