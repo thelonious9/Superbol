@@ -2,1091 +2,1325 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Captura de Información Institucional</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro general de información</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root {
+      --color-fondo-pagina: #fcfcfc;
+      --color-fondo-form: #ffffff;
+      --color-primary: #15173D;
+      --color-danger: #d90000;
+      --color-text: #15173D;
+      --color-border: #15173D;
+      --radius: 0px;
+      --table-zoom: 1;
+      --color-blocked-bg: #eaecf0;
+    }
 
-        :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --bg-page: #f1f5f9;
-            --bg-card: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --input-bg: #ffffff;
-            --danger: #ef4444;
-            --success: #10b981;
-            --radius: 10px;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
+    body.dark-mode {
+      --color-fondo-pagina: #1a1a1a;
+      --color-fondo-form: #242424;
+      --color-text: #e0e0e0;
+      --color-border: #444;
+      --color-blocked-bg: #2d2d2d;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        body {
-            background-color: var(--bg-page);
-            color: var(--text-main);
-            padding: 2rem;
-            min-height: 100vh;
-        }
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      margin: 0 auto;
+      max-width: 1440px;
+      padding: 40px;
+      background: var(--color-fondo-pagina);
+      color: var(--color-text);
+      letter-spacing: -0.3px;
+      transition: background-color 0.3s, color 0.3s;
+    }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+    header {
+      border-top: 5px solid var(--color-text);
+      border-bottom: 5px solid var(--color-text);
+      padding: 24px 0;
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        header {
-            background: var(--bg-card);
-            padding: 1.5rem 2rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 1rem;
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
+    header h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: -1.5px;
+    }
 
-        header.shrunk {
-            padding: 0.8rem 2rem;
-            top: 0;
-            border-radius: 0 0 var(--radius) var(--radius);
-        }
+    header h1::after {
+      content: '®';
+      font-size: 1.5rem;
+      vertical-align: super;
+      font-weight: 400;
+    }
 
-        header .logo-box {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+    .header-content p {
+      margin: 5px 0 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
 
-        header img {
-            height: 48px;
-            transition: height 0.3s ease;
-        }
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
 
-        header.shrunk img {
-            height: 32px;
-        }
+    .nav-btn,
+    .theme-toggle-btn {
+      background: transparent;
+      border: 2px solid var(--color-border);
+      color: var(--color-text);
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
 
-        header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-main);
-        }
+    .nav-btn:hover,
+    .theme-toggle-btn:hover {
+      background: var(--color-text);
+      color: var(--color-fondo-pagina);
+    }
 
-        section {
-            background: var(--bg-card);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            margin-bottom: 1.5rem;
-            overflow: hidden;
-        }
+    .art-box {
+      background: var(--color-text);
+      width: 100%;
+      height: 120px;
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
 
-        .section-header {
-            background: #006699;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            margin: -1.5rem -1.5rem 1.5rem -1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+    .art-circle {
+      width: 150px;
+      height: 150px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      position: absolute;
+      top: -15px;
+    }
 
-        .section-header i {
-            font-size: 1.5rem;
-        }
+    .art-circle:nth-child(1) {
+      left: calc(50% - 225px);
+    }
 
-        .section-header h2 {
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
+    .art-circle:nth-child(2) {
+      left: calc(50% - 75px);
+    }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 0.75rem;
-        }
+    .art-circle:nth-child(3) {
+      left: calc(50% + 75px);
+    }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            position: relative;
-        }
+    form {
+      display: grid;
+      grid-template-columns: auto 1fr auto 1fr;
+      gap: 16px 20px;
+    }
 
-        label {
-            font-weight: 600;
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
+    label {
+      font-weight: 700;
+      align-self: center;
+      font-size: 1.1rem;
+      color: var(--color-text);
+    }
 
-        .campo-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            position: relative;
-        }
+    .campo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
 
-        input[type="text"],
-        input[type="number"],
-        input[type="date"],
-        textarea {
-            flex: 1;
-            padding: 0.5rem 0.75rem;
-            border: 2px solid var(--border);
-            border-radius: var(--radius);
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-            background: var(--input-bg);
-            outline: none;
-            width: 100%;
-        }
+    .campo-full {
+      grid-column: 2 / span 3;
+    }
 
-        textarea {
-            resize: none;
-            overflow-y: hidden;
-            min-height: 42px;
-            line-height: 1.5;
-        }
+    .campo input[type="text"],
+    .campo input[type="date"],
+    .campo textarea,
+    .campo select {
+      flex: 1;
+      padding: 10px 14px;
+      border: 2px solid var(--color-border);
+      background: var(--color-fondo-form);
+      color: var(--color-text);
+      font-family: inherit;
+      font-size: 1rem;
+      outline: none;
+      border-radius: 0;
+    }
 
-        input:focus,
-        textarea:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-        }
+    .campo input:focus,
+    .campo textarea:focus,
+    .campo select:focus {
+      background-color: var(--color-text);
+      color: var(--color-fondo-pagina);
+    }
 
-        input.bloqueado,
-        textarea.bloqueado {
-            background-color: #f8fafc;
-            border-color: #cbd5e1;
-            color: #94a3b8;
-            cursor: not-allowed;
-        }
+    .campo textarea {
+      min-height: 45px;
+      height: auto;
+      overflow-y: hidden;
+      resize: none;
+    }
 
-        .btn-sugerencia,
-        .btn-lock {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            padding: 0.5rem;
-            transition: color 0.2s;
-        }
+    .campo-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
 
-        .btn-sugerencia:hover {
-            color: var(--primary);
-        }
+    .btn-campo {
+      padding: 10px 14px;
+      border: 2px solid var(--color-border);
+      background: transparent;
+      color: var(--color-text);
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+    }
 
-        .btn-lock:hover {
-            color: var(--danger);
-        }
+    .btn-campo:hover {
+      background: var(--color-text);
+      color: var(--color-fondo-pagina);
+    }
 
-        .lock-checkbox {
-            display: none;
-        }
+    .campo input[type="checkbox"] {
+      display: none;
+    }
 
-        .lock-checkbox:checked+.btn-lock {
-            color: var(--danger);
-        }
+    .lock-label {
+      cursor: pointer;
+      color: var(--color-text);
+      font-size: 1.1rem;
+      opacity: 0.3;
+      transition: all 0.2s;
+    }
 
-        .sugerencias {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 100;
-            display: none;
-        }
+    .campo input[type="checkbox"]:checked+.lock-label {
+      opacity: 1;
+    }
 
-        .sugerencia-item {
-            padding: 0.75rem 1rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
+    .bloqueado {
+      background: var(--color-blocked-bg) !important;
+      pointer-events: none;
+    }
 
-        .sugerencia-item:hover {
-            background: #f1f5f9;
-        }
+    .sugerencias {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      border: 2px solid var(--color-border);
+      background: var(--color-fondo-form);
+      color: var(--color-text);
+      max-height: 220px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+    }
 
-        .button-bar {
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
+    .sugerencia {
+      padding: 10px 14px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
 
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--radius);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            border: none;
-        }
+    .sugerencia:hover,
+    .sugerencia.resaltado {
+      background: var(--color-text);
+      color: var(--color-fondo-pagina);
+    }
 
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
+    .form-section-title {
+      grid-column: 1 / span 4;
+      font-size: 1.25rem;
+      font-weight: 800;
+      border-bottom: 2px solid var(--color-text);
+      padding-bottom: 8px;
+      margin-top: 20px;
+      text-transform: uppercase;
+    }
 
-        .btn-primary:hover {
-            background: var(--primary-hover);
-            transform: translateY(-1px);
-        }
+    .button-group-form {
+      grid-column: 1 / span 4;
+      display: flex;
+      gap: 14px;
+      margin-top: 16px;
+      border-top: 2px solid var(--color-border);
+      padding-top: 20px;
+      flex-wrap: wrap;
+    }
 
-        .btn-secondary {
-            background: var(--border);
-            color: var(--text-main);
-        }
+    button:not(.btn-campo) {
+      padding: 12px 18px;
+      border: 2px solid var(--color-border);
+      font-weight: 700;
+      color: var(--color-text);
+      background: transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1rem;
+    }
 
-        .btn-secondary:hover {
-            background: #cbd5e1;
-        }
+    button:not(.btn-campo):hover {
+      background: var(--color-text);
+      color: var(--color-fondo-pagina);
+    }
 
-        .table-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
+    #btnBorrarTodo,
+    #btnEliminar {
+      border-color: var(--color-danger);
+      color: var(--color-danger);
+    }
 
-        .search-box {
-            position: relative;
-            width: 300px;
-        }
+    #btnBorrarTodo:hover,
+    #btnEliminar:hover {
+      background: var(--color-danger);
+      color: #fff;
+    }
 
-        .search-box i {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-        }
+    .table-header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 40px;
+      margin-bottom: 15px;
+      border-bottom: 2px solid var(--color-text);
+      padding-bottom: 10px;
+    }
 
-        .search-box input {
-            padding-left: 2.5rem;
-            width: 100%;
-        }
+    .table-header-container h2 {
+      font-size: 2rem;
+      margin: 0;
+      font-weight: 700;
+    }
 
-        .table-responsive {
-            overflow-x: auto;
-        }
+    .zoom-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+    .btn-zoom {
+      padding: 6px 10px;
+      border: 2px solid var(--color-border);
+      background: transparent;
+      color: var(--color-text);
+      cursor: pointer;
+      font-weight: bold;
+    }
 
-        th {
-            text-align: left;
-            padding: 1rem;
-            background: #f8fafc;
-            font-weight: 700;
-            color: var(--text-muted);
-            border-bottom: 2px solid var(--border);
-            white-space: nowrap;
-        }
+    .btn-zoom:hover {
+      background: var(--color-text);
+      color: var(--color-fondo-pagina);
+    }
 
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
-            vertical-align: middle;
-        }
+    .zoom-display {
+      font-weight: bold;
+      min-width: 50px;
+      text-align: center;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
 
-        tr:hover {
-            background: #f8fafc;
-        }
+    #buscador {
+      padding: 6px 10px;
+      border: 2px solid var(--color-border);
+      background: var(--color-fondo-form);
+      color: var(--color-text);
+      font-size: 1rem;
+    }
 
-        .btn-action {
-            padding: 0.4rem;
-            font-size: 0.9rem;
-            border-radius: 6px;
-            cursor: pointer;
-            border: none;
-            background: none;
-            color: var(--text-muted);
-            transition: color 0.2s;
-        }
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border: 2px solid var(--color-border);
+      background: var(--color-fondo-form);
+      margin-top: 15px;
+    }
 
-        .btn-edit:hover {
-            color: var(--primary);
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: calc(0.9rem * var(--table-zoom));
+    }
 
-        .btn-delete:hover {
-            color: var(--danger);
-        }
+    th {
+      background: var(--color-fondo-form);
+      color: var(--color-text);
+      padding: 12px 10px;
+      font-weight: 800;
+      border: 1px solid var(--color-border);
+      text-align: left;
+      white-space: nowrap;
+      text-transform: uppercase;
+      cursor: pointer;
+      user-select: none;
+    }
 
-        footer {
-            text-align: center;
-            margin-top: 4rem;
-            color: var(--text-muted);
-            font-size: 0.875rem;
-        }
+    td {
+      padding: 12px 10px;
+      border: 1px solid var(--color-border);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+    }
 
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem;
-            }
+    tr:hover td {
+      background: var(--color-text);
+      color: var(--color-fondo-pagina);
+    }
 
-            header {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
+    tr.editando td {
+      background: #fffde7 !important;
+      color: #555 !important;
+    }
 
-            .button-bar {
-                flex-direction: column;
-            }
-        }
-    </style>
+    tr.alerta-vacio {
+      border-left: 4px solid #f6ad55;
+    }
+
+    .acciones-btn-group {
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+    }
+
+    .btn-icon-accion {
+      background: transparent;
+      border: 1.5px solid var(--color-border);
+      color: var(--color-text);
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.85rem;
+    }
+
+    .btn-icon-accion:hover {
+      background: var(--color-text);
+      color: var(--color-fondo-pagina);
+    }
+
+    .btn-icon-accion.borrar:hover {
+      background: var(--color-danger);
+      border-color: var(--color-danger);
+      color: #fff;
+    }
+
+    @media (max-width: 1024px) {
+      form {
+        grid-template-columns: auto 1fr;
+      }
+
+      .campo-full {
+        grid-column: 2;
+      }
+
+      .button-group-form,
+      .form-section-title {
+        grid-column: 1 / span 2;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <header id="mainHeader">
-            <div class="logo-box">
-                <img src="./logo.png" alt="Logo">
-                <h1>Captura Institucional</h1>
-            </div>
-            <div id="stats" style="display: flex; align-items: center; gap: 1.5rem;">
-                <a href="dashboard.html" class="btn btn-secondary"
-                    style="background: #006699; color: white; padding: 0.5rem 1rem; font-size: 0.9rem;">
-                    <i class="fas fa-chart-line"></i> Ver Dashboard
-                </a>
-                <span id="recordCount" style="color: var(--text-muted); font-weight: 600;">0 registros guardados</span>
-            </div>
-        </header>
+  <header>
+    <div class="header-content">
+      <h1>Registro general de información</h1>
+      <p id="recordCount">0 registros capturados</p>
+    </div>
+    <div class="header-actions">
+      <a href="dashboard.html" class="nav-btn" title="Ver Dashboard"><i class="fas fa-chart-line"></i></a>
+      <button class="theme-toggle-btn" onclick="toggleDarkMode()" title="Cambiar tema"><i class="fas fa-moon"
+          id="themeIcon"></i></button>
+    </div>
+  </header>
 
-        <section>
-            <div class="section-header">
-                <i class="fas fa-edit"></i>
-                <h2>Captura de Información</h2>
-            </div>
-            <form id="captureForm">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>📋 Género</label>
-                        <div class="campo-wrapper">
-                            <input type="text" id="genero" name="genero" autocomplete="off" required>
-                            <button type="button" class="btn-sugerencia" onclick="toggleSuggestions('genero')"><i
-                                    class="fas fa-chevron-down"></i></button>
-                            <input type="checkbox" id="lock-genero" class="lock-checkbox">
-                            <label for="lock-genero" class="btn-lock"><i class="fas fa-lock"></i></label>
-                            <div id="sug-genero" class="sugerencias"></div>
-                        </div>
-                    </div>
+  <div class="art-box">
+    <div class="art-circle"></div>
+    <div class="art-circle"></div>
+    <div class="art-circle"></div>
+  </div>
 
-                    <div class="form-group">
-                        <label>🔢 ID</label>
-                        <div class="campo-wrapper">
-                            <input type="number" id="id_consecutivo" name="id_consecutivo" placeholder="ID">
-                        </div>
-                    </div>
+  <form id="notaForm">
 
-                    <div class="form-group">
-                        <label>📅 Fecha</label>
-                        <div class="campo-wrapper">
-                            <input type="date" id="fecha" name="fecha" required>
-                            <input type="checkbox" id="lock-fecha" class="lock-checkbox">
-                            <label for="lock-fecha" class="btn-lock"><i class="fas fa-lock"></i></label>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>📰 Titular</label>
-                        <div class="campo-wrapper">
-                            <input type="text" id="titulo" name="titulo" required placeholder="Titular de la nota">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>🏢 Dependencia</label>
-                        <div class="campo-wrapper">
-                            <input type="text" id="dependencia" name="dependencia" autocomplete="off" required>
-                            <button type="button" class="btn-sugerencia" onclick="toggleSuggestions('dependencia')"><i
-                                    class="fas fa-chevron-down"></i></button>
-                            <input type="checkbox" id="lock-dependencia" class="lock-checkbox">
-                            <label for="lock-dependencia" class="btn-lock"><i class="fas fa-lock"></i></label>
-                            <div id="sug-dependencia" class="sugerencias"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>🏛️ Organismo</label>
-                        <div class="campo-wrapper">
-                            <input type="text" id="organismo" name="organismo" autocomplete="off" required>
-                            <button type="button" class="btn-sugerencia" onclick="toggleSuggestions('organismo')"><i
-                                    class="fas fa-chevron-down"></i></button>
-                            <input type="checkbox" id="lock-organismo" class="lock-checkbox">
-                            <label for="lock-organismo" class="btn-lock"><i class="fas fa-lock"></i></label>
-                            <div id="sug-organismo" class="sugerencias"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>📍 Municipio</label>
-                        <div class="campo-wrapper">
-                            <input type="text" id="municipio" name="municipio" autocomplete="off" required>
-                            <button type="button" class="btn-sugerencia" onclick="toggleSuggestions('municipio')"><i
-                                    class="fas fa-chevron-down"></i></button>
-                            <input type="checkbox" id="lock-municipio" class="lock-checkbox">
-                            <label for="lock-municipio" class="btn-lock"><i class="fas fa-lock"></i></label>
-                            <div id="sug-municipio" class="sugerencias"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>🏘️ Localidad</label>
-                        <div class="campo-wrapper">
-                            <input type="text" id="localidad" name="localidad" autocomplete="off" required>
-                            <button type="button" class="btn-sugerencia" onclick="toggleSuggestions('localidad')"><i
-                                    class="fas fa-chevron-down"></i></button>
-                            <input type="checkbox" id="lock-localidad" class="lock-checkbox">
-                            <label for="lock-localidad" class="btn-lock"><i class="fas fa-lock"></i></label>
-                            <div id="sug-localidad" class="sugerencias"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>📁 Tipo</label>
-                        <div class="campo-wrapper">
-                            <input type="text" id="tipo" name="tipo" autocomplete="off" required>
-                            <button type="button" class="btn-sugerencia" onclick="toggleSuggestions('tipo')"><i
-                                    class="fas fa-chevron-down"></i></button>
-                            <input type="checkbox" id="lock-tipo" class="lock-checkbox">
-                            <label for="lock-tipo" class="btn-lock"><i class="fas fa-lock"></i></label>
-                            <div id="sug-tipo" class="sugerencias"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>📤 Emite</label>
-                        <div class="campo-wrapper">
-                            <input type="text" id="emite" name="emite" autocomplete="off" required>
-                            <button type="button" class="btn-sugerencia" onclick="toggleSuggestions('emite')"><i
-                                    class="fas fa-chevron-down"></i></button>
-                            <input type="checkbox" id="lock-emite" class="lock-checkbox">
-                            <label for="lock-emite" class="btn-lock"><i class="fas fa-lock"></i></label>
-                            <div id="sug-emite" class="sugerencias"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>🤝 Tema</label>
-                        <div class="campo-wrapper">
-                            <input type="text" id="tema" name="tema" autocomplete="off" required
-                                placeholder="Seleccione un tema">
-                            <button type="button" class="btn-sugerencia" onclick="toggleSuggestions('tema')"><i
-                                    class="fas fa-chevron-down"></i></button>
-                            <input type="checkbox" id="lock-tema" class="lock-checkbox">
-                            <label for="lock-tema" class="btn-lock"><i class="fas fa-lock"></i></label>
-                            <div id="sug-tema" class="sugerencias"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label>📝 Notas (opcional)</label>
-                        <div class="campo-wrapper">
-                            <textarea id="notas" name="notas" placeholder="Agregue notas adicionales aquí..."
-                                rows="1"></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="button-bar">
-                    <button type="button" class="btn btn-secondary" id="btnBorrarTodo" style="color: var(--danger);"><i
-                            class="fas fa-trash-alt"></i> Borrar Todo</button>
-                    <button type="button" class="btn btn-secondary" id="btnLimpiar"><i class="fas fa-undo"></i> Limpiar
-                        (Esc)</button>
-                    <button type="button" class="btn btn-secondary" id="btnExportar"><i
-                            class="fas fa-cloud-upload-alt"></i>
-                        Exportar y Respaldar</button>
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar (Ctrl+Q)</button>
-                </div>
-                <div id="exportStatus"
-                    style="text-align: right; margin-top: 0.5rem; font-size: 0.85rem; font-weight: 600; min-height: 1.2rem;">
-                </div>
-            </form>
-        </section>
-
-        <section>
-            <div class="table-controls">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchTable" placeholder="Buscar registros..." oninput="filterTable()">
-                </div>
-                <h2 style="font-size: 1.25rem;">Registros Capturados</h2>
-            </div>
-
-            <div class="table-responsive">
-                <table id="dataTable">
-                    <thead>
-                        <tr>
-                            <th>Género</th>
-                            <th>ID</th>
-                            <th>Fecha</th>
-                            <th>Titular</th>
-                            <th>Dependencia</th>
-                            <th>Organismo</th>
-                            <th>Municipio</th>
-                            <th>Localidad</th>
-                            <th>Tipo</th>
-                            <th>Emite</th>
-                            <th>Tema</th>
-                            <th>Notas</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <!-- Data rows injected here -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
+    <!-- Usuario -->
+    <label for="usuario">Usuario:</label>
+    <div class="campo">
+      <input type="text" id="usuario" autocomplete="off" required>
+      <div class="campo-actions">
+        <button type="button" class="btn-campo" onclick="mostrarTodo('usuario')" tabindex="-1">🔽</button>
+        <input type="checkbox" id="checkUsuario" onchange="alternarBloqueo('usuario')" tabindex="-1">
+        <label for="checkUsuario" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+      <div id="sugUsuario" class="sugerencias"></div>
     </div>
 
-    <footer>
-        &copy; 2026 - Sistema de Captura Institucional | Francisco Villeda
-    </footer>
+    <!-- Género + ID -->
+    <label for="genero">Género:</label>
+    <div class="campo">
+      <input type="text" id="genero" autocomplete="off" required>
+      <div class="campo-actions">
+        <button type="button" class="btn-campo" onclick="mostrarTodo('genero')" tabindex="-1">🔽</button>
+        <input type="checkbox" id="checkGenero" onchange="alternarBloqueo('genero')" tabindex="-1">
+        <label for="checkGenero" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+      <div id="sugGenero" class="sugerencias"></div>
+    </div>
 
-    <script id="mainScript">
+    <label for="id_consecutivo">ID:</label>
+    <div class="campo">
+      <input type="text" id="id_consecutivo" placeholder="Alfanumérico (ej. A123)">
+      <div class="campo-actions">
+        <input type="checkbox" id="checkId" onchange="alternarBloqueo('id_consecutivo')" tabindex="-1">
+        <label for="checkId" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+    </div>
 
-        const CSV_CONFIG = {
-            'genero': 'Género.csv',
-            'dependencia': 'Dependencia.csv',
-            'organismo': 'Organismo.csv',
-            'municipio': 'Municipio.csv',
-            'localidad': 'Localidad.csv',
-            'tipo': 'Tipo.csv',
-            'emite': 'Emisión.csv',
-            'tema': 'Tema.csv'
+    <!-- Fecha + Tipo -->
+    <label for="fecha">Fecha:</label>
+    <div class="campo">
+      <input type="date" id="fecha" required>
+      <div class="campo-actions">
+        <input type="checkbox" id="checkFecha" onchange="alternarBloqueo('fecha')" tabindex="-1">
+        <label for="checkFecha" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+    </div>
+
+    <label for="tipo">Tipo:</label>
+    <div class="campo">
+      <input type="text" id="tipo" autocomplete="off" required>
+      <div class="campo-actions">
+        <button type="button" class="btn-campo" onclick="mostrarTodo('tipo')" tabindex="-1">🔽</button>
+        <input type="checkbox" id="checkTipo" onchange="alternarBloqueo('tipo')" tabindex="-1">
+        <label for="checkTipo" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+      <div id="sugTipo" class="sugerencias"></div>
+    </div>
+
+    <!-- Titular -->
+    <label for="titular">Titular:</label>
+    <div class="campo campo-full">
+      <textarea id="titular" required oninput="ajustarAlturaCampo('titular')"></textarea>
+      <div class="campo-actions">
+        <input type="checkbox" id="checkTitular" onchange="alternarBloqueo('titular')" tabindex="-1">
+        <label for="checkTitular" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+    </div>
+
+    <!-- Dependencia + Organismo (dependiente) -->
+    <label for="dependencia">Dependencia:</label>
+    <div class="campo">
+      <input type="text" id="dependencia" autocomplete="off" required>
+      <div class="campo-actions">
+        <button type="button" class="btn-campo" onclick="mostrarTodo('dependencia')" tabindex="-1">🔽</button>
+        <input type="checkbox" id="checkDependencia" onchange="alternarBloqueo('dependencia')" tabindex="-1">
+        <label for="checkDependencia" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+      <div id="sugDependencia" class="sugerencias"></div>
+    </div>
+
+    <label for="organismo">Organismo:</label>
+    <div class="campo">
+      <input type="text" id="organismo" autocomplete="off" placeholder="Selecciona Dependencia primero">
+      <div class="campo-actions">
+        <button type="button" class="btn-campo" onclick="mostrarTodo('organismo')" tabindex="-1">🔽</button>
+        <input type="checkbox" id="checkOrganismo" onchange="alternarBloqueo('organismo')" tabindex="-1">
+        <label for="checkOrganismo" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+      <div id="sugOrganismo" class="sugerencias"></div>
+    </div>
+
+    <!-- Municipio + Localidad (dependiente) -->
+    <label for="municipio">Municipio / Región:</label>
+    <div class="campo">
+      <input type="text" id="municipio" autocomplete="off" required>
+      <div class="campo-actions">
+        <button type="button" class="btn-campo" onclick="mostrarTodo('municipio')" tabindex="-1">🔽</button>
+        <input type="checkbox" id="checkMunicipio" onchange="alternarBloqueo('municipio')" tabindex="-1">
+        <label for="checkMunicipio" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+      <div id="sugMunicipio" class="sugerencias"></div>
+    </div>
+
+    <label for="localidad">Localidad:</label>
+    <div class="campo">
+      <input type="text" id="localidad" autocomplete="off" placeholder="Selecciona Municipio primero">
+      <div class="campo-actions">
+        <button type="button" class="btn-campo" onclick="mostrarTodo('localidad')" tabindex="-1">🔽</button>
+        <input type="checkbox" id="checkLocalidad" onchange="alternarBloqueo('localidad')" tabindex="-1">
+        <label for="checkLocalidad" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+      <div id="sugLocalidad" class="sugerencias"></div>
+    </div>
+
+    <!-- Emite + Tema -->
+    <label for="emite">Emite:</label>
+    <div class="campo">
+      <input type="text" id="emite" autocomplete="off" required>
+      <div class="campo-actions">
+        <button type="button" class="btn-campo" onclick="mostrarTodo('emite')" tabindex="-1">🔽</button>
+        <input type="checkbox" id="checkEmite" onchange="alternarBloqueo('emite')" tabindex="-1">
+        <label for="checkEmite" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+      <div id="sugEmite" class="sugerencias"></div>
+    </div>
+
+    <label for="tema">Tema:</label>
+    <div class="campo">
+      <input type="text" id="tema" autocomplete="off">
+      <div class="campo-actions">
+        <button type="button" class="btn-campo" onclick="mostrarTodo('tema')" tabindex="-1">🔽</button>
+        <input type="checkbox" id="checkTema" onchange="alternarBloqueo('tema')" tabindex="-1">
+        <label for="checkTema" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+      <div id="sugTema" class="sugerencias"></div>
+    </div>
+
+
+
+    <!-- Enlace -->
+    <label for="enlace">Enlace:</label>
+    <div class="campo campo-full">
+      <input type="text" id="enlace">
+    </div>
+
+    <!-- Revisión editorial → ahora aquí, después de Enlace -->
+    <label for="revision">Revisión:</label>
+    <div class="campo">
+      <input type="text" id="revision" autocomplete="off">
+      <div class="campo-actions">
+        <button type="button" class="btn-campo" onclick="mostrarTodo('revision')" tabindex="-1">🔽</button>
+        <input type="checkbox" id="checkRevision" onchange="alternarBloqueo('revision')" tabindex="-1">
+        <label for="checkRevision" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+      <div id="sugRevision" class="sugerencias"></div>
+    </div>
+
+    <!-- Espacio vacío para mantener la rejilla -->
+    <div></div>
+    <div></div>
+
+    <!-- Binarios: Foto/imágenes, Video, Audio -->
+    <label for="foto_imagenes">Foto/imágenes:</label>
+    <div class="campo">
+      <select id="foto_imagenes">
+        <option value="">— Seleccionar —</option>
+        <option value="Sí">Sí</option>
+        <option value="No">No</option>
+      </select>
+      <div class="campo-actions">
+        <input type="checkbox" id="checkFoto_imagenes" onchange="alternarBloqueo('foto_imagenes')" tabindex="-1">
+        <label for="checkFoto_imagenes" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+    </div>
+
+    <label for="video">Video:</label>
+    <div class="campo">
+      <select id="video">
+        <option value="">— Seleccionar —</option>
+        <option value="Sí">Sí</option>
+        <option value="No">No</option>
+      </select>
+      <div class="campo-actions">
+        <input type="checkbox" id="checkVideo" onchange="alternarBloqueo('video')" tabindex="-1">
+        <label for="checkVideo" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+    </div>
+
+    <label for="audio">Audio:</label>
+    <div class="campo">
+      <select id="audio">
+        <option value="">— Seleccionar —</option>
+        <option value="Sí">Sí</option>
+        <option value="No">No</option>
+      </select>
+      <div class="campo-actions">
+        <input type="checkbox" id="checkAudio" onchange="alternarBloqueo('audio')" tabindex="-1">
+        <label for="checkAudio" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+    </div>
+
+    <!-- Espacio vacío -->
+    <div></div>
+    <div></div>
+
+    <!-- Cobertura -->
+    <div class="form-section-title" style="display:flex;align-items:center;justify-content:space-between;">
+      <span>Cobertura</span>
+      <button type="button" id="btnNoAplica" onclick="noAplica()"
+        style="margin-top:0;font-size:0.9rem;padding:6px 14px;"><i class="fa-solid fa-ban"></i> No aplica</button>
+    </div>
+
+    <label for="reporta">Reporta:</label>
+    <div class="campo">
+      <input type="text" id="reporta" autocomplete="off">
+      <div class="campo-actions">
+        <button type="button" class="btn-campo" onclick="mostrarTodo('reporta')" tabindex="-1">🔽</button>
+        <input type="checkbox" id="checkReporta" onchange="alternarBloqueo('reporta')" tabindex="-1">
+        <label for="checkReporta" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+      <div id="sugReporta" class="sugerencias"></div>
+    </div>
+
+    <label for="fotografia">Fotografía:</label>
+    <div class="campo">
+      <input type="text" id="fotografia" autocomplete="off">
+      <div class="campo-actions">
+        <button type="button" class="btn-campo" onclick="mostrarTodo('fotografia')" tabindex="-1">🔽</button>
+        <input type="checkbox" id="checkFotografia" onchange="alternarBloqueo('fotografia')" tabindex="-1">
+        <label for="checkFotografia" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+      <div id="sugFotografia" class="sugerencias"></div>
+    </div>
+
+    <label for="audiovisual">Audiovisual:</label>
+    <div class="campo">
+      <input type="text" id="audiovisual" autocomplete="off">
+      <div class="campo-actions">
+        <button type="button" class="btn-campo" onclick="mostrarTodo('audiovisual')" tabindex="-1">🔽</button>
+        <input type="checkbox" id="checkAudiovisual" onchange="alternarBloqueo('audiovisual')" tabindex="-1">
+        <label for="checkAudiovisual" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+      <div id="sugAudiovisual" class="sugerencias"></div>
+    </div>
+
+    <label for="redes">Redes:</label>
+    <div class="campo">
+      <input type="text" id="redes" autocomplete="off">
+      <div class="campo-actions">
+        <button type="button" class="btn-campo" onclick="mostrarTodo('redes')" tabindex="-1">🔽</button>
+        <input type="checkbox" id="checkRedes" onchange="alternarBloqueo('redes')" tabindex="-1">
+        <label for="checkRedes" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+      <div id="sugRedes" class="sugerencias"></div>
+    </div>
+
+    <label for="logistica">Logística:</label>
+    <div class="campo">
+      <input type="text" id="logistica" autocomplete="off">
+      <div class="campo-actions">
+        <button type="button" class="btn-campo" onclick="mostrarTodo('logistica')" tabindex="-1">🔽</button>
+        <input type="checkbox" id="checkLogistica" onchange="alternarBloqueo('logistica')" tabindex="-1">
+        <label for="checkLogistica" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+      <div id="sugLogistica" class="sugerencias"></div>
+    </div>
+
+    <!-- Espacio -->
+    <div></div>
+    <div></div>
+
+    <div class="button-group-form">
+      <button type="submit" id="btnGuardar"><i class="fa-solid fa-floppy-disk"></i> Guardar (Ctrl+Q)</button>
+      <button type="button" onclick="limpiarFormulario()"><i class="fa-solid fa-broom"></i> Limpiar</button>
+      <button type="button" id="btnExportar" onclick="exportarNotas()"><i class="fa-solid fa-file-export"></i> Exportar
+        captura</button>
+      <button type="button" id="btnEliminar" style="display:none" onclick="borrarNota()"><i
+          class="fa-solid fa-trash-can"></i> Eliminar</button>
+      <button type="button" id="btnBorrarTodo" onclick="borrarTodo()"><i class="fa-solid fa-triangle-exclamation"></i>
+        Borrar Todo</button>
+    </div>
+  </form>
+
+  <div class="table-header-container">
+    <h2>Detalle de Captura</h2>
+    <div class="zoom-controls">
+      <button class="btn-zoom" onclick="ajustarZoom(-0.1)">−</button>
+      <span class="zoom-display" id="zoomVal" onclick="ajustarZoom(0,true)">100%</span>
+      <button class="btn-zoom" onclick="ajustarZoom(0.1)">+</button>
+      <input type="text" id="buscador" placeholder="Filtrar notas..." style="margin-left:15px;">
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table id="tablaNotas">
+      <thead>
+        <tr>
+          <th onclick="ordenar('usuario')">Usuario</th>
+          <th onclick="ordenar('genero')">Género</th>
+          <th onclick="ordenar('id_consecutivo')">ID</th>
+          <th onclick="ordenar('fecha')">Fecha</th>
+          <th onclick="ordenar('titular')">Titular</th>
+          <th onclick="ordenar('dependencia')">Dependencia</th>
+          <th onclick="ordenar('organismo')">Organismo</th>
+          <th onclick="ordenar('municipio')">Municipio / Región</th>
+          <th onclick="ordenar('localidad')">Localidad</th>
+          <th onclick="ordenar('tipo')">Tipo</th>
+          <th onclick="ordenar('emite')">Emite</th>
+          <th onclick="ordenar('tema')">Tema</th>
+
+          <th onclick="ordenar('enlace')">Enlace</th>
+          <th onclick="ordenar('revision')">Revisión</th>
+          <th onclick="ordenar('foto_imagenes')">Fotos</th>
+          <th onclick="ordenar('video')">Video</th>
+          <th onclick="ordenar('audio')">Audio</th>
+          <th onclick="ordenar('reporta')">Reporta</th>
+          <th onclick="ordenar('fotografia')">Fotografía</th>
+          <th onclick="ordenar('audiovisual')">Audiovisual</th>
+          <th onclick="ordenar('redes')">Redes</th>
+          <th onclick="ordenar('logistica')">Logística</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    // ─── CONFIGURACIÓN ────────────────────────────────────────────────────────
+    const CAMPOS = ['usuario', 'genero', 'id_consecutivo', 'fecha', 'titular', 'dependencia', 'organismo',
+      'municipio', 'localidad', 'tipo', 'emite', 'tema', 'enlace', 'revision',
+      'foto_imagenes', 'video', 'audio', 'reporta', 'fotografia', 'audiovisual', 'redes', 'logistica'];
+
+    const CAMPOS_OBLIGATORIOS = ['usuario', 'genero', 'fecha', 'titular', 'dependencia', 'municipio', 'tipo', 'emite'];
+
+    // Campos que son <select> (no manejan autocomplete de texto)
+    const CAMPOS_SELECT = ['foto_imagenes', 'video', 'audio'];
+
+    function getCheckId(id) {
+      const excepciones = { 'id_consecutivo': 'checkId', 'foto_imagenes': 'checkFoto_imagenes' };
+      return excepciones[id] || `check${id.charAt(0).toUpperCase() + id.slice(1)}`;
+    }
+
+    function getSugId(id) {
+      return `sug${id.charAt(0).toUpperCase() + id.slice(1)}`;
+    }
+
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbw7mr_aL1DADiJ8Iy_RgOXBzFgHrcQKBCkRETtpGO6iBWsqmGzcvy3eFbKmrXrHNXiITw/exec";
+
+    const URLS_CSV = {
+      usuario: './Usuario.csv',
+      genero: './Género.csv',
+      // organismo.csv tiene col1=Dependencia, col2=Organismo → se usa para AMBOS (dep y org)
+      organismo: './Organismo.csv',
+      municipio: './Municipio.csv',
+      localidad: './Localidad.csv',   // col1=Municipio, col2=Localidad
+      tipo: './Tipo.csv',
+      emite: './Emisión.csv',
+      tema: './Tema.csv',
+      reporta: './Reportere.csv',
+      fotografia: './Foto.csv',
+      audiovisual: './Video.csv',
+      redes: './Redes.csv',
+      logistica: './Logistica.csv',
+      revision: './Revision.csv'
+    };
+
+    // Estado global
+    let notas = JSON.parse(localStorage.getItem('superbol_notas') || '[]');
+    let depOrgMap = {};   // { "Bienestar": ["IAAMEH","Inhjuve",...], ... }
+    let munLocMap = {};   // { "Actopan": ["Actopan","Benito Juárez",...], ... }
+    let filaEnEdicion = null;
+    let zoomLevel = 1.0;
+    let ordenActual = { col: 'fecha', dir: 'desc' };
+
+    // ─── UTILS CSV ────────────────────────────────────────────────────────────
+    async function cargarCSV(url) {
+      try {
+        const res = await fetch(`${url}?t=${Date.now()}`);
+        const buf = await res.arrayBuffer();
+        const txt = new TextDecoder('utf-8').decode(buf);
+        // Divide en líneas y cada línea en celdas por coma
+        return txt.split('\n').map(l => l.split(',').map(c => c.trim().replace(/\r$/, '')));
+      } catch { return []; }
+    }
+
+    function limpiarFilas(filas) {
+      if (!filas.length) return [];
+      // Eliminar BOM
+      if (filas[0] && filas[0][0]) filas[0][0] = filas[0][0].replace(/^\uFEFF/, '');
+      // Detectar encabezado por keywords
+      const cab = filas[0].map(c => c.toLowerCase()).join(',');
+      const tieneEncabezado = /dependencia|municipio|localidad|organismo|género|genero|usuario/.test(cab);
+      return (tieneEncabezado ? filas.slice(1) : filas).filter(r => r[0]);
+    }
+
+    // Construye { clave → [valores] } de un CSV de dos columnas
+    async function cargarMapa(url) {
+      const rows = limpiarFilas(await cargarCSV(url));
+      const mapa = {};
+      rows.forEach(([k, v]) => {
+        if (!k) return;
+        if (!mapa[k]) mapa[k] = [];
+        if (v && !mapa[k].includes(v)) mapa[k].push(v);
+      });
+      // Ordenar valores
+      Object.keys(mapa).forEach(k => mapa[k].sort((a, b) => a.localeCompare(b, 'es')));
+      return mapa;
+    }
+
+    // Extrae lista simple (primera columna) de un CSV
+    async function cargarLista(url) {
+      const rows = limpiarFilas(await cargarCSV(url));
+      const set = new Set(rows.map(r => r[0]).filter(Boolean));
+      return Array.from(set).sort((a, b) => a.localeCompare(b, 'es'));
+    }
+
+    // ─── SUGERENCIAS ─────────────────────────────────────────────────────────
+    function cerrarSugerencias() {
+      document.querySelectorAll('.sugerencias').forEach(el => {
+        el.innerHTML = ''; el.style.display = 'none';
+      });
+    }
+
+    function mostrarListaEn(idCampo, items, alSeleccionar) {
+      const input = document.getElementById(idCampo);
+      const cont = document.getElementById(getSugId(idCampo));
+      if (!cont) return;
+
+      cerrarSugerencias();
+      if (!items.length) return;
+
+      cont.style.display = 'block';
+      items.forEach(s => {
+        const d = document.createElement('div');
+        d.className = 'sugerencia';
+        d.textContent = s;
+        d.onmousedown = ev => {
+          ev.preventDefault();
+          input.value = s;
+          cerrarSugerencias();
+          if (alSeleccionar) alSeleccionar(s);
+          moverFoco(input);
         };
+        cont.appendChild(d);
+      });
+    }
 
-        let csvData = {};
-        let records = JSON.parse(localStorage.getItem('captured_records') || '[]');
-        let lastId = parseInt(localStorage.getItem('last_id') || '0');
-        let editingIndex = null;
-        let selectedSuggestionIndex = -1;
-        let currentFilteredSuggestions = [];
+    // Botón 🔽: muestra todos sin filtrar
+    function mostrarTodo(idCampo) {
+      const input = document.getElementById(idCampo);
+      const cont = document.getElementById(getSugId(idCampo));
+      if (!cont) return;
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', async () => {
-            await loadAllCSVs();
-            renderTable();
-            setupKeyboardShortcuts();
-            setupAutoSaveLocks();
-            setupElasticTextarea();
-            updateStats();
+      // Toggle
+      if (cont.style.display === 'block') { cerrarSugerencias(); return; }
 
-            // Set initial date
-            if (!document.getElementById('fecha').value) {
-                document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
-            }
-        });
+      const lista = JSON.parse(input.dataset.lista || '[]');
+      // Callback adecuado según campo
+      const cb = idCampo === 'dependencia' ? actualizarOrganismo
+        : idCampo === 'municipio' ? actualizarLocalidad
+          : null;
+      mostrarListaEn(idCampo, lista, cb);
+    }
 
-        async function loadAllCSVs() {
-            for (const [key, filename] of Object.entries(CSV_CONFIG)) {
-                try {
-                    const response = await fetch(filename);
-                    const text = await response.text();
-                    csvData[key] = parseCSV(text);
-                } catch (e) {
-                    console.error(`Error loading ${filename}:`, e);
-                    csvData[key] = [];
-                }
-            }
+    // Registra lista en dataset y adjunta listeners de escritura predictiva
+    function registrarAutocompletado(idCampo, lista, alSeleccionar) {
+      const input = document.getElementById(idCampo);
+      const cont = document.getElementById(getSugId(idCampo));
+      if (!input || !cont) return;
+
+      input.dataset.lista = JSON.stringify(lista);
+      let indice = -1;
+
+      // Escritura predictiva
+      input.addEventListener('input', () => {
+        const val = input.value.toLowerCase().trim();
+        indice = -1;
+        if (!val) { cerrarSugerencias(); return; }
+        const listaActual = JSON.parse(input.dataset.lista || '[]');
+        const filtrados = listaActual.filter(i => i.toLowerCase().includes(val));
+        mostrarListaEn(idCampo, filtrados, alSeleccionar);
+      });
+
+      // Navegación con teclado
+      input.addEventListener('keydown', e => {
+        const items = cont.querySelectorAll('.sugerencia');
+        const N = items.length;
+
+        // Enter/Tab con única sugerencia
+        if (N === 1 && (e.key === 'Enter' || e.key === 'Tab')) {
+          e.preventDefault();
+          const val = items[0].textContent;
+          input.value = val;
+          cerrarSugerencias();
+          if (alSeleccionar) alSeleccionar(val);
+          moverFoco(input);
+          return;
         }
+        if (N === 0 && e.key === 'Enter') { e.preventDefault(); moverFoco(input); return; }
 
-        function parseCSV(text) {
-            const lines = text.split(/\r?\n/).filter(line => line.trim() !== "");
-            if (lines.length === 0) return [];
-
-            const headers = lines[0].split(',').map(h => h.trim());
-            return lines.slice(1).map(line => {
-                const values = line.split(',');
-                const obj = {};
-                headers.forEach((header, i) => {
-                    obj[header] = values[i] ? values[i].trim() : "";
-                });
-                return obj;
-            });
+        if (e.key === 'ArrowDown') {
+          e.preventDefault(); indice = (indice + 1) % N; resaltar(items, indice);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault(); indice = (indice - 1 + N) % N; resaltar(items, indice);
+        } else if (e.key === 'Enter' && indice >= 0) {
+          e.preventDefault();
+          const val = items[indice].textContent;
+          input.value = val;
+          cerrarSugerencias();
+          if (alSeleccionar) alSeleccionar(val);
+          moverFoco(input);
+          indice = -1;
         }
+      });
 
-        // Suggestion Logic
-        function toggleSuggestions(fieldId) {
-            const container = document.getElementById(`sug-${fieldId}`);
-            if (!container) return;
-            if (container.style.display === 'block') {
-                container.style.display = 'none';
-            } else {
-                showSuggestions(fieldId, document.getElementById(fieldId).value);
-            }
+      input.addEventListener('blur', () => setTimeout(cerrarSugerencias, 200));
+
+      function resaltar(its, i) {
+        its.forEach(el => el.classList.remove('resaltado'));
+        its[i].classList.add('resaltado');
+        its[i].scrollIntoView({ block: 'nearest' });
+      }
+    }
+
+    // ─── DEPENDENCIAS ─────────────────────────────────────────────────────────
+    function actualizarOrganismo(dep) {
+      const lista = depOrgMap[dep] || [];
+      const orgInput = document.getElementById('organismo');
+      orgInput.dataset.lista = JSON.stringify(lista);
+      orgInput.placeholder = lista.length ? 'Seleccionar Organismo' : 'Sin organismos para esta dependencia';
+    }
+
+    function actualizarLocalidad(mun) {
+      const lista = munLocMap[mun] || [];
+      const locInput = document.getElementById('localidad');
+      locInput.dataset.lista = JSON.stringify(lista);
+      locInput.placeholder = lista.length ? 'Seleccionar Localidad' : 'Sin localidades para este municipio';
+    }
+
+    // ─── FOCO ─────────────────────────────────────────────────────────────────
+    function moverFoco(actual) {
+      const todos = Array.from(document.querySelectorAll(
+        'input:not([type="checkbox"]):not([tabindex="-1"]), textarea, select'));
+      const activos = todos.filter(el => !el.readOnly && !el.disabled);
+      const idx = activos.indexOf(actual);
+      if (idx > -1 && idx < activos.length - 1) activos[idx + 1].focus();
+    }
+
+    // ─── INIT ─────────────────────────────────────────────────────────────────
+    async function init() {
+      // 1. Listas simples
+      const simplesConf = [
+        ['usuario', './Usuario.csv', null],
+        ['genero', URLS_CSV.genero, null],
+        ['tipo', URLS_CSV.tipo, null],
+        ['emite', URLS_CSV.emite, null],
+        ['tema', URLS_CSV.tema, null],
+        ['reporta', URLS_CSV.reporta, null],
+        ['fotografia', URLS_CSV.fotografia, null],
+        ['audiovisual', URLS_CSV.audiovisual, null],
+        ['redes', URLS_CSV.redes, null],
+        ['logistica', URLS_CSV.logistica, null],
+        ['revision', URLS_CSV.revision, null],
+      ];
+      for (const [id, url] of simplesConf) {
+        const lista = await cargarLista(url);
+        registrarAutocompletado(id, lista, null);
+      }
+
+      // 2. Dependencia → Organismo
+      //    Organismo.csv = col1:Dependencia, col2:Organismo
+      depOrgMap = await cargarMapa(URLS_CSV.organismo);
+      const depList = Object.keys(depOrgMap).sort((a, b) => a.localeCompare(b, 'es'));
+      registrarAutocompletado('dependencia', depList, dep => {
+        actualizarOrganismo(dep);
+      });
+      // Organismo: empieza vacío; se llena cuando se elige Dependencia
+      registrarAutocompletado('organismo', [], null);
+
+      // 3. Municipio → Localidad
+      //    Localidad.csv = col1:"Municipio o demarcación territorial", col2:Localidad
+      munLocMap = await cargarMapa(URLS_CSV.localidad);
+      const munList = Object.keys(munLocMap).sort((a, b) => a.localeCompare(b, 'es'));
+      registrarAutocompletado('municipio', munList, mun => {
+        actualizarLocalidad(mun);
+      });
+      registrarAutocompletado('localidad', [], null);
+
+      // 4. Restaurar bloqueos guardados
+      CAMPOS.forEach(id => {
+        if (localStorage.getItem(`bloqueado_${id}`) === 'true') {
+          const chk = document.getElementById(getCheckId(id));
+          if (chk) { chk.checked = true; alternarBloqueo(id); }
+          const val = localStorage.getItem(id);
+          if (val !== null) setValor(id, val);
+          // Actualizar dependencias si había valor bloqueado
+          if (id === 'dependencia') actualizarOrganismo(val);
+          if (id === 'municipio') actualizarLocalidad(val);
         }
+      });
 
-        function showSuggestions(fieldId, query) {
-            const container = document.getElementById(`sug-${fieldId}`);
-            if (!container) return;
-            container.innerHTML = "";
-            selectedSuggestionIndex = -1;
+      // 5. Fecha de hoy por defecto
+      const fechaEl = document.getElementById('fecha');
+      if (!fechaEl.value) fechaEl.value = new Date().toISOString().split('T')[0];
 
-            let list = [];
-            if (fieldId === 'organismo') {
-                const dep = document.getElementById('dependencia').value;
-                list = csvData['organismo']
-                    ? csvData['organismo'].filter(item => item.Dependencia === dep).map(item => item.Organismo)
-                    : [];
-            } else if (fieldId === 'localidad') {
-                const mun = document.getElementById('municipio').value;
-                list = csvData['localidad']
-                    ? csvData['localidad'].filter(item => (item.Municipio || item['Municipio o demarcación territorial']) === mun).map(item => item.Localidad)
-                    : [];
-            } else if (CSV_CONFIG[fieldId] && csvData[fieldId] && csvData[fieldId].length > 0) {
-                const head = Object.keys(csvData[fieldId][0])[0];
-                list = [...new Set(csvData[fieldId].map(item => item[head]))];
-            }
+      renderizarTabla();
+      document.getElementById('buscador').addEventListener('input', renderizarTabla);
+    }
 
-            currentFilteredSuggestions = list.filter(item =>
-                item.toLowerCase().includes(query.toLowerCase())
-            );
+    // ─── FORMULARIO ───────────────────────────────────────────────────────────
+    function getValor(id) {
+      const el = document.getElementById(id); return el ? el.value : '';
+    }
+    function setValor(id, val) {
+      const el = document.getElementById(id); if (el) el.value = val;
+    }
 
-            if (currentFilteredSuggestions.length > 0) {
-                container.style.display = 'block';
-                currentFilteredSuggestions.forEach((item, index) => {
-                    const div = document.createElement('div');
-                    div.className = 'sugerencia-item';
-                    div.id = `sug-item-${fieldId}-${index}`;
-                    div.textContent = item;
-                    div.onclick = () => selectSuggestion(fieldId, item);
-                    container.appendChild(div);
-                });
-            } else {
-                container.style.display = 'none';
-            }
+    function alternarBloqueo(id) {
+      const el = document.getElementById(id);
+      const chk = document.getElementById(getCheckId(id));
+      if (!el || !chk) return;
+      const esSelect = el.tagName === 'SELECT';
+      el.readOnly = !esSelect && chk.checked;
+      el.disabled = esSelect && chk.checked;
+      el.classList.toggle('bloqueado', chk.checked);
+      localStorage.setItem(`bloqueado_${id}`, chk.checked);
+      if (chk.checked) localStorage.setItem(id, el.value);
+      else localStorage.removeItem(id);
+    }
+
+    function ajustarAlturaCampo(id) {
+      const el = document.getElementById(id);
+      if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
+    }
+
+    function resetEdicion() {
+      filaEnEdicion = null;
+      document.getElementById('btnGuardar').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar (Ctrl+Q)';
+      document.getElementById('btnEliminar').style.display = 'none';
+    }
+
+    function limpiarNoBloqueados() {
+      CAMPOS.forEach(id => {
+        const chk = document.getElementById(getCheckId(id));
+        if (!chk || !chk.checked) { if (id !== 'fecha') setValor(id, ''); }
+      });
+      ['titular', 'notas'].forEach(ajustarAlturaCampo);
+    }
+
+    function limpiarFormulario() {
+      CAMPOS.forEach(id => {
+        const chk = document.getElementById(getCheckId(id));
+        if (chk) { chk.checked = false; alternarBloqueo(id); }
+        setValor(id, '');
+      });
+      resetEdicion();
+      ['titular', 'notas'].forEach(ajustarAlturaCampo);
+    }
+
+    // ─── GUARDAR ──────────────────────────────────────────────────────────────
+    document.getElementById('notaForm').onsubmit = e => {
+      e.preventDefault();
+      const data = {};
+      CAMPOS.forEach(id => data[id] = getValor(id));
+      if (filaEnEdicion !== null) {
+        notas[filaEnEdicion] = data; resetEdicion();
+      } else {
+        notas.push(data);
+      }
+      localStorage.setItem('superbol_notas', JSON.stringify(notas));
+      limpiarNoBloqueados();
+      renderizarTabla();
+      document.getElementById('titular').focus();
+    };
+
+    // ─── TABLA ────────────────────────────────────────────────────────────────
+    function renderizarTabla() {
+      const body = document.querySelector('#tablaNotas tbody');
+      const filtro = document.getElementById('buscador').value.toLowerCase();
+      body.innerHTML = '';
+
+      let data = [...notas];
+      if (filtro) data = data.filter(n => Object.values(n).some(v => (v || '').toLowerCase().includes(filtro)));
+
+      data.sort((a, b) => {
+        const vA = (a[ordenActual.col] || '').toString();
+        const vB = (b[ordenActual.col] || '').toString();
+        const r = vA.localeCompare(vB, 'es', { sensitivity: 'base' });
+        return ordenActual.dir === 'asc' ? r : -r;
+      });
+
+      data.forEach(n => {
+        const idx = notas.indexOf(n);
+        const tr = document.createElement('tr');
+        if (idx === filaEnEdicion) tr.classList.add('editando');
+        if (CAMPOS_OBLIGATORIOS.some(c => !(n[c] || '').trim())) tr.classList.add('alerta-vacio');
+
+        tr.innerHTML = CAMPOS.map(id => `<td title="${n[id] || ''}">${n[id] || ''}</td>`).join('') + `
+          <td>
+            <div class="acciones-btn-group">
+              <button class="btn-icon-accion" onclick="editarNota(${idx})" title="Editar"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-icon-accion borrar" onclick="borrarNota(${idx})" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>`;
+        body.appendChild(tr);
+      });
+
+      document.getElementById('recordCount').textContent = `${notas.length} registros capturados`;
+    }
+
+    function editarNota(idx) {
+      filaEnEdicion = idx;
+      const n = notas[idx];
+      CAMPOS.forEach(id => setValor(id, n[id] || ''));
+      document.getElementById('btnGuardar').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Actualizar Nota';
+      document.getElementById('btnEliminar').style.display = 'inline-block';
+      if (n.dependencia) actualizarOrganismo(n.dependencia);
+      if (n.municipio) actualizarLocalidad(n.municipio);
+      ['titular', 'notas'].forEach(ajustarAlturaCampo);
+      renderizarTabla();
+      window.scrollTo(0, 0);
+    }
+
+    function borrarNota(idx = null) {
+      const i = idx !== null ? idx : filaEnEdicion;
+      if (i !== null && confirm('¿Eliminar esta nota?')) {
+        notas.splice(i, 1);
+        localStorage.setItem('superbol_notas', JSON.stringify(notas));
+        limpiarFormulario(); renderizarTabla();
+      }
+    }
+
+    function borrarTodo() {
+      if (confirm('¿BORRAR ABSOLUTAMENTE TODO el historial local?')) {
+        notas = [];
+        localStorage.removeItem('superbol_notas');
+        limpiarFormulario(); renderizarTabla();
+      }
+    }
+
+    // ─── UI ───────────────────────────────────────────────────────────────────
+    function ajustarZoom(delta, reset = false) {
+      if (reset) zoomLevel = 1.0; else zoomLevel += delta;
+      document.documentElement.style.setProperty('--table-zoom', zoomLevel);
+      document.getElementById('zoomVal').textContent = Math.round(zoomLevel * 100) + '%';
+    }
+
+    function ordenar(col) {
+      if (ordenActual.col === col) ordenActual.dir = ordenActual.dir === 'asc' ? 'desc' : 'asc';
+      else { ordenActual.col = col; ordenActual.dir = 'asc'; }
+      renderizarTabla();
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      document.getElementById('themeIcon').className =
+        document.body.classList.contains('dark-mode') ? 'fas fa-sun' : 'fas fa-moon';
+    }
+
+    // Cerrar sugerencias clicking fuera
+    document.addEventListener('mousedown', e => {
+      if (!e.target.closest('.campo')) cerrarSugerencias();
+    });
+
+    // ─── ATAJOS ───────────────────────────────────────────────────────────────
+    document.addEventListener('keydown', e => {
+      if (e.ctrlKey && e.key === 'q') {
+        e.preventDefault();
+        document.getElementById('notaForm').requestSubmit();
+      }
+      if (e.ctrlKey && e.shiftKey && e.key === 'L') {
+        e.preventDefault();
+        const active = document.activeElement;
+        if (active && CAMPOS.includes(active.id)) {
+          const chk = document.getElementById(getCheckId(active.id));
+          if (chk) { chk.checked = !chk.checked; alternarBloqueo(active.id); }
         }
+      }
+    });
 
-        function selectSuggestion(fieldId, value) {
-            document.getElementById(fieldId).value = value;
-            document.getElementById(`sug-${fieldId}`).style.display = 'none';
+    // ─── NO APLICA ────────────────────────────────────────────────────────────
+    function noAplica() {
+      ['reporta', 'fotografia', 'audiovisual', 'redes', 'logistica'].forEach(id => {
+        setValor(id, 'N/A');
+      });
+    }
 
-            // Reset dependent fields
-            if (fieldId === 'dependencia') document.getElementById('organismo').value = "";
-            if (fieldId === 'municipio') document.getElementById('localidad').value = "";
+    // ─── EXPORTAR ─────────────────────────────────────────────────────────────
+    async function exportarNotas() {
+      if (!notas.length) { alert('No hay notas para exportar.'); return; }
+      const btn = document.getElementById('btnExportar');
+      const original = btn ? btn.innerHTML : '';
+      if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
 
-            // Focus next field
-            const inputs = Array.from(document.querySelectorAll('#captureForm input:not([type="checkbox"])'));
-            const index = inputs.indexOf(document.getElementById(fieldId));
-            if (index > -1 && index < inputs.length - 1) {
-                inputs[index + 1].focus();
-            }
-        }
+      try {
+        const payload = notas.map(n => ({
+          "Usuario": n.usuario,
+          "Género": n.genero,
+          "ID": n.id_consecutivo,
+          "Fecha": n.fecha,
+          "Titular": n.titular,
+          "Dependencia": n.dependencia,
+          "Organismo": n.organismo,
+          "Municipio / Región": n.municipio,
+          "Localidad": n.localidad,
+          "Tipo": n.tipo,
+          "Emite": n.emite,
+          "Tema": n.tema,
+          "Enlace": n.enlace,
+          "Revisión editorial": n.revision,
+          "Foto/imágenes": n.foto_imagenes,
+          "Video": n.video,
+          "Audio": n.audio,
+          "Reporta": n.reporta,
+          "Fotografía": n.fotografia,
+          "Audiovisual": n.audiovisual,
+          "Redes": n.redes,
+          "Logística": n.logistica
+        }));
+        // Enviar a Google Sheets
+        const p = new URLSearchParams();
+        p.append('data', JSON.stringify(payload));
+        await fetch(GAS_URL, { method: 'POST', mode: 'no-cors', body: p });
 
-        function updateSuggestionHighlight(fieldId) {
-            const items = document.querySelectorAll(`#sug-${fieldId} .sugerencia-item`);
-            items.forEach((item, index) => {
-                if (index === selectedSuggestionIndex) {
-                    item.style.background = '#f1f5f9';
-                    if (item.scrollIntoView) item.scrollIntoView({ block: 'nearest' });
-                } else {
-                    item.style.background = 'none';
-                }
-            });
-        }
+        // Descargar copia CSV
+        const encabezados = Object.keys(payload[0]);
+        const filasCsv = payload.map(row =>
+          encabezados.map(h => `"${(row[h] || '').replace(/"/g, '""')}"`).join(',')
+        );
+        const csvContent = '\uFEFF' + [encabezados.join(','), ...filasCsv].join('\r\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const fecha = new Date().toISOString().slice(0, 10);
+        link.href = URL.createObjectURL(blob);
+        link.download = `superbol_captura_${fecha}.csv`;
+        link.click();
 
-        // Elastic Textarea Logic
-        function setupElasticTextarea() {
-            const textarea = document.getElementById('notas');
-            if (textarea) {
-                textarea.addEventListener('input', function () {
-                    this.style.height = 'auto';
-                    this.style.height = (this.scrollHeight) + 'px';
-                });
-            }
-        }
+        alert('Datos enviados a Google Sheets y descargados como CSV.');
+      } catch (err) {
+        alert('Error al exportar: ' + err.message);
+      } finally {
+        if (btn) { btn.disabled = false; btn.innerHTML = original; }
+      }
+    }
 
-        // Input events for suggestions
-        ['genero', 'dependencia', 'organismo', 'municipio', 'localidad', 'tipo', 'emite', 'tema'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                el.addEventListener('input', (e) => showSuggestions(id, e.target.value));
-                el.addEventListener('focus', (e) => {
-                    showSuggestions(id, e.target.value);
-                });
-                el.addEventListener('keydown', (e) => {
-                    const container = document.getElementById(`sug-${id}`);
-                    if (container && container.style.display === 'block') {
-                        if (e.key === 'ArrowDown') {
-                            e.preventDefault();
-                            selectedSuggestionIndex = (selectedSuggestionIndex + 1) % currentFilteredSuggestions.length;
-                            updateSuggestionHighlight(id);
-                        } else if (e.key === 'ArrowUp') {
-                            e.preventDefault();
-                            selectedSuggestionIndex = (selectedSuggestionIndex - 1 + currentFilteredSuggestions.length) % currentFilteredSuggestions.length;
-                            updateSuggestionHighlight(id);
-                        } else if (e.key === 'Enter' || e.key === 'Tab') {
-                            if (currentFilteredSuggestions.length === 1) {
-                                e.preventDefault();
-                                selectSuggestion(id, currentFilteredSuggestions[0]);
-                            } else if (selectedSuggestionIndex > -1) {
-                                e.preventDefault();
-                                selectSuggestion(id, currentFilteredSuggestions[selectedSuggestionIndex]);
-                            }
-                        }
-                    }
-                });
-            }
-        });
-
-        // Close suggestions on click outside
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.campo-wrapper')) {
-                document.querySelectorAll('.sugerencias').forEach(s => s.style.display = 'none');
-            }
-        });
-
-        // Form Handling
-        document.getElementById('captureForm').onsubmit = (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData.entries());
-
-            if (editingIndex !== null) {
-                records[editingIndex] = data;
-                editingIndex = null;
-            } else {
-                records.push(data);
-                if (data.id_consecutivo && parseInt(data.id_consecutivo) > lastId) {
-                    lastId = parseInt(data.id_consecutivo);
-                }
-            }
-
-            saveData();
-            renderTable();
-            clearNonLockedFields();
-            updateStats();
-            document.getElementById('titulo').focus();
-        };
-
-        function saveData() {
-            localStorage.setItem('captured_records', JSON.stringify(records));
-            localStorage.setItem('last_id', lastId.toString());
-        }
-
-        function clearNonLockedFields() {
-            const fields = ['titulo', 'id_consecutivo', 'notas'];
-            fields.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.value = "";
-            });
-
-            // Specific logic for fields with locks
-            ['fecha', 'genero', 'dependencia', 'organismo', 'municipio', 'localidad', 'tipo', 'emite', 'tema'].forEach(id => {
-                const lock = document.getElementById(`lock-${id}`);
-                if (!lock || !lock.checked) {
-                    const el = document.getElementById(id);
-                    if (el) el.value = "";
-                }
-            });
-
-            // Reset elastic textarea height
-            const notas = document.getElementById('notas');
-            if (notas) notas.style.height = 'auto';
-        }
-
-        // URL de la Web App de Google Apps Script (Reemplazar después de desplegar)
-        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbw7mr_aL1DADiJ8Iy_RgOXBzFgHrcQKBCkRETtpGO6iBWsqmGzcvy3eFbKmrXrHNXiITw/exec";
-
-        function renderTable() {
-            const tbody = document.getElementById('tableBody');
-            if (!tbody) return;
-            tbody.innerHTML = "";
-
-            records.slice().reverse().forEach((record, idx) => {
-                const actualIdx = records.length - 1 - idx;
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                <td>${record.genero || ''}</td>
-                <td>${record.id_consecutivo || '-'}</td>
-                <td>${record.fecha || ''}</td>
-                <td>${record.titulo || ''}</td>
-                <td>${record.dependencia || ''}</td>
-                <td>${record.organismo || ''}</td>
-                <td>${record.municipio || ''}</td>
-                <td>${record.localidad || ''}</td>
-                <td>${record.tipo || ''}</td>
-                <td>${record.emite || ''}</td>
-                <td>${record.tema || ''}</td>
-                <td title="${record.notas || ''}">${record.notas ? (record.notas.length > 20 ? record.notas.substring(0, 20) + '...' : record.notas) : '-'}</td>
-                <td>
-                    <button type="button" class="btn-action btn-edit" onclick="editRecord(${actualIdx})"><i class="fas fa-edit"></i></button>
-                    <button type="button" class="btn-action btn-delete" onclick="deleteRecord(${actualIdx})"><i class="fas fa-trash"></i></button>
-                </td>
-            `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // ANSI (Windows-1252) export logic + Google Sheets Backup
-        document.getElementById('btnExportar').onclick = async function () {
-            if (records.length === 0) return alert('No hay datos para exportar');
-
-            const fieldOrder = ['genero', 'id_consecutivo', 'fecha', 'titulo', 'dependencia', 'organismo', 'municipio', 'localidad', 'tipo', 'emite', 'tema', 'notas'];
-            const headers = "Genero,ID,Fecha,Titular,Dependencia,Organismo,Municipio,Localidad,Tipo,Emite,Tema,Notas";
-
-            // 1. Export CSV (ANSI)
-            const rows = records.map(r => {
-                return fieldOrder.map(field => {
-                    let val = (r[field] || "").toString().replace(/"/g, '""');
-                    return `"${val}"`;
-                }).join(',');
-            });
-
-            const content = [headers, ...rows].join('\r\n');
-            const buffer = new ArrayBuffer(content.length);
-            const view = new Uint8Array(buffer);
-            for (let i = 0; i < content.length; i++) {
-                let charCode = content.charCodeAt(i);
-                if (charCode > 127) {
-                    const map = { 'á': 0xE1, 'é': 0xE9, 'í': 0xED, 'ó': 0xF3, 'ú': 0xFA, 'Á': 0xC1, 'É': 0xC9, 'Í': 0xCD, 'Ó': 0xD3, 'Ú': 0xDA, 'ñ': 0xF1, 'Ñ': 0xD1, 'ü': 0xFC, 'Ü': 0xDC };
-                    view[i] = map[content[i]] || 0x3F;
-                } else {
-                    view[i] = charCode;
-                }
-            }
-
-            try {
-                const blob = new Blob([view], { type: 'text/csv;charset=windows-1252' });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                a.download = 'captura_institucional.csv';
-                document.body.appendChild(a);
-                a.click();
-                setTimeout(() => {
-                    document.body.removeChild(a);
-                    window.URL.revokeObjectURL(url);
-                }, 100);
-            } catch (err) {
-                console.error("Error al descargar CSV local", err);
-            }
-
-            // 2. Respaldar a Google Sheets
-            const orderedRecords = records.map(r => ({
-                "Género": r.genero || "",
-                "ID": r.id_consecutivo || "",
-                "Fecha": r.fecha || "",
-                "Titular": r.titulo || "",
-                "Dependencia": r.dependencia || "",
-                "Organismo": r.organismo || "",
-                "Municipio": r.municipio || "",
-                "Localidad": r.localidad || "",
-                "Tipo": r.tipo || "",
-                "Emite": r.emite || "",
-                "Tema": r.tema || "",
-                "Notas": r.notas || ""
-            }));
-            await respaldarAGoogleSheets(orderedRecords);
-        };
-
-        async function respaldarAGoogleSheets(data) {
-            if (GOOGLE_SHEETS_URL === "https://script.google.com/macros/s/AKfycbw7mr_aL1DADiJ8Iy_RgOXBzFgHrcQKBCkRETtpGO6iBWsqmGzcvy3eFbKmrXrHNXiITw/exec" && GOOGLE_SHEETS_URL.includes("TU_URL_DE_WEB_APP_AQUI")) {
-                console.warn("Google Sheets URL no configurada.");
-                return;
-            }
-
-            const btn = document.getElementById('btnExportar');
-            const statusEl = document.getElementById('exportStatus');
-            const originalContent = btn.innerHTML;
-
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Respaldando...';
-            btn.disabled = true;
-            statusEl.textContent = "Iniciando respaldo...";
-            statusEl.style.color = "var(--text-muted)";
-
-            try {
-                // To avoid missing postData from no-cors redirects, we send the payload
-                // as a standard URL-encoded form field "data"
-                const params = new URLSearchParams();
-                params.append('data', JSON.stringify(data));
-
-                await fetch(GOOGLE_SHEETS_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    cache: 'no-cache',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: params.toString()
-                });
-
-                statusEl.textContent = "✅ Respaldo enviado con éxito";
-                statusEl.style.color = "var(--success)";
-                setTimeout(() => { statusEl.textContent = ""; }, 5000);
-            } catch (error) {
-                console.error('Error en respaldo:', error);
-                statusEl.textContent = "❌ Error al conectar: " + error.message;
-                statusEl.style.color = "var(--danger)";
-            } finally {
-                btn.innerHTML = originalContent;
-                btn.disabled = false;
-            }
-        }
-
-        function editRecord(idx) {
-            const record = records[idx];
-            editingIndex = idx;
-            for (const [key, value] of Object.entries(record)) {
-                const el = document.getElementById(key);
-                if (el) {
-                    el.value = value;
-                    if (key === 'notas') {
-                        el.style.height = 'auto';
-                        el.style.height = (el.scrollHeight) + 'px';
-                    }
-                }
-            }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function deleteRecord(idx) {
-            if (confirm('¿Eliminar este registro?')) {
-                records.splice(idx, 1);
-                saveData();
-                renderTable();
-                updateStats();
-            }
-        }
-
-        document.getElementById('btnLimpiar').onclick = () => {
-            document.getElementById('captureForm').reset();
-            editingIndex = null;
-        };
-
-        document.getElementById('btnBorrarTodo').onclick = () => {
-            if (confirm('¿ESTÁS SEGURO? Se borrarán TODOS los registros capturados permanentemente.')) {
-                records = [];
-                lastId = 0;
-                saveData();
-                renderTable();
-                updateStats();
-            }
-        };
-
-        function filterTable() {
-            const query = document.getElementById('searchTable').value.toLowerCase();
-            const rows = document.querySelectorAll('#tableBody tr');
-            rows.forEach(row => {
-                row.style.display = row.textContent.toLowerCase().includes(query) ? "" : "none";
-            });
-        }
-
-        function updateStats() {
-            const countEl = document.getElementById('recordCount');
-            if (countEl) countEl.textContent = `${records.length} registros guardados`;
-        }
-
-        // Shortcuts & Navigation
-        function setupKeyboardShortcuts() {
-            document.addEventListener('keydown', (e) => {
-                // Enter as Tab
-                if (e.key === 'Enter' && e.target.tagName === 'INPUT' && e.target.type !== 'submit') {
-                    const container = e.target.closest('.campo-wrapper')?.querySelector('.sugerencias');
-                    if (!container || container.style.display !== 'block') {
-                        e.preventDefault();
-                        const focusable = Array.from(document.querySelectorAll('#captureForm input:not([type="checkbox"]), #captureForm textarea'));
-                        const index = focusable.indexOf(e.target);
-                        if (index > -1 && index < focusable.length - 1) {
-                            focusable[index + 1].focus();
-                        }
-                    }
-                }
-
-                // Ctrl + Q: Guardar
-                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'q') {
-                    e.preventDefault();
-                    document.getElementById('captureForm').requestSubmit();
-                }
-
-                // Ctrl + Shift + L: Lock Toggle
-                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'l') {
-                    e.preventDefault();
-                    if (document.activeElement && document.activeElement.id) {
-                        const lock = document.getElementById(`lock-${document.activeElement.id}`);
-                        if (lock) lock.click();
-                    }
-                }
-
-                // Ctrl + Shift + J: Duplicate Last
-                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'j') {
-                    e.preventDefault();
-                    if (records.length > 0) {
-                        const last = records[records.length - 1];
-                        for (const [key, value] of Object.entries(last)) {
-                            const el = document.getElementById(key);
-                            if (el && key !== 'titulo' && key !== 'id_consecutivo') el.value = value;
-                        }
-                    }
-                }
-
-                // Esc: Reset
-                if (e.key === 'Escape') {
-                    document.getElementById('btnLimpiar').click();
-                }
-            });
-
-            window.addEventListener('scroll', () => {
-                const header = document.getElementById('mainHeader');
-                if (header) {
-                    if (window.scrollY > 50) header.classList.add('shrunk');
-                    else header.classList.remove('shrunk');
-                }
-            });
-        }
-
-        function setupAutoSaveLocks() {
-            const locks = document.querySelectorAll('.lock-checkbox');
-            locks.forEach(lock => {
-                const id = lock.id.replace('lock-', '');
-                const saved = localStorage.getItem(`lock_state_${id}`);
-                if (saved === 'true') lock.checked = true;
-
-                lock.onchange = () => {
-                    localStorage.setItem(`lock_state_${id}`, lock.checked);
-                    const input = document.getElementById(id);
-                    if (input) {
-                        if (lock.checked) input.classList.add('bloqueado');
-                        else input.classList.remove('bloqueado');
-                    }
-                };
-
-                // Initial check
-                if (lock.checked) {
-                    const input = document.getElementById(id);
-                    if (input) input.classList.add('bloqueado');
-                }
-            });
-        }
-    </script>
+    // ─── ARRANCAR ─────────────────────────────────────────────────────────────
+    init();
+  </script>
 </body>
 
 </html>
