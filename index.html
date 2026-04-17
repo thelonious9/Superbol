@@ -1148,6 +1148,14 @@
       document.getElementById('titular').focus();
     };
 
+    // Al presionar Enter en Enlace, no guardar, solo avanzar
+    document.getElementById('enlace').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        moverFoco(this);
+      }
+    });
+
     // ─── TABLA ────────────────────────────────────────────────────────────────
     function renderizarTabla() {
       const body = document.querySelector('#tablaNotas tbody');
@@ -1263,6 +1271,14 @@
     // ─── EXPORTAR ─────────────────────────────────────────────────────────────
     async function exportarNotas() {
       if (!notas.length) { alert('No hay notas para exportar.'); return; }
+
+      const usuarioVal = getValor('usuario').trim();
+      if (!usuarioVal) {
+        alert('Por favor, ingresa el nombre de Usuario antes de exportar.');
+        document.getElementById('usuario').focus();
+        return;
+      }
+
       const btn = document.getElementById('btnExportar');
       const original = btn ? btn.innerHTML : '';
       if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
@@ -1307,7 +1323,7 @@
         const link = document.createElement('a');
         const fecha = new Date().toISOString().slice(0, 10);
         link.href = URL.createObjectURL(blob);
-        link.download = `superbol_captura_${fecha}.csv`;
+        link.download = `${usuarioVal}_${fecha}.csv`;
         link.click();
 
         alert('Datos enviados a Google Sheets y descargados como CSV.');
