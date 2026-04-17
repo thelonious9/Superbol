@@ -591,9 +591,6 @@
                 <i class="fas fa-shopping-bag"></i>
                 <div class="value" id="kpi-total">-</div>
                 <div class="label">TOTAL DE PRODUCTOS</div>
-                <div class="kpi-gender-section" id="kpi-gender-total">
-                    <!-- Dynamic breakdown -->
-                </div>
                 <div id="comp-total" style="font-size: 0.8rem; font-weight: 600;"></div>
                 <div class="active-filters-info" id="filters-total"></div>
             </div>
@@ -1041,35 +1038,49 @@
         function filterByState(data, state) {
             return data.filter(r => {
                 const rDate = parseDate(r.Fecha);
-                if (!rDate) return false;
-
                 let inDate = true;
-                if (state.grain === 'day') {
-                    const d = new Date(state.start);
-                    inDate = rDate.toDateString() === d.toDateString();
-                } else if (state.grain === 'month') {
-                    if (!state.start) return true;
-                    const [y, m] = state.start.split('-').map(Number);
-                    inDate = rDate.getFullYear() === y && (rDate.getMonth() + 1) === m;
-                } else if (state.grain === 'year') {
-                    if (!state.start) return true;
-                    inDate = rDate.getFullYear() === parseInt(state.start);
-                } else if (state.grain === 'quarter') {
-                    if (!state.start) return true;
-                    const parts = (state.start || '').split('-Q');
-                    if (parts.length !== 2) return true;
-                    const y = parseInt(parts[0], 10);
-                    const q = parseInt(parts[1].replace('Q', ''), 10);
-                    if (!y || !q) return true;
-                    const startMonth = (q - 1) * 3;
-                    const s = new Date(y, startMonth, 1);
-                    const e = new Date(y, startMonth + 3, 0);
-                    inDate = rDate >= s && rDate <= e;
-                } else {
-                    const s = parseDate(state.start);
-                    const e = parseDate(state.end);
-                    if (e) e.setHours(23, 59, 59); // make end inclusive
-                    inDate = (!s || rDate >= s) && (!e || rDate <= e);
+
+                if (state.start || state.end) {
+                    if (!rDate) {
+                        inDate = false;
+                    } else if (state.grain === 'day') {
+                        const d = parseDate(state.start);
+                        if (d) {
+                            inDate = rDate.getFullYear() === d.getFullYear() &&
+                                     rDate.getMonth() === d.getMonth() &&
+                                     rDate.getDate() === d.getDate();
+                        } else {
+                            inDate = false;
+                        }
+                    } else if (state.grain === 'month') {
+                        if (state.start.includes('-')) {
+                            const [y, m] = state.start.split('-').map(Number);
+                            inDate = rDate.getFullYear() === y && (rDate.getMonth() + 1) === m;
+                        }
+                    } else if (state.grain === 'year') {
+                        inDate = rDate.getFullYear() === parseInt(state.start);
+                    } else if (state.grain === 'quarter') {
+                        const parts = state.start.split('-Q');
+                        if (parts.length === 2) {
+                            const y = parseInt(parts[0], 10);
+                            const q = parseInt(parts[1].replace('Q', ''), 10);
+                            if (y && q) {
+                                const startMonth = (q - 1) * 3;
+                                const s = new Date(y, startMonth, 1);
+                                const e = new Date(y, startMonth + 3, 0);
+                                inDate = rDate >= s && rDate <= e;
+                            } else {
+                                inDate = false;
+                            }
+                        } else {
+                            inDate = false;
+                        }
+                    } else if (state.grain === 'range') {
+                        const s = parseDate(state.start);
+                        const e = parseDate(state.end);
+                        if (e) e.setHours(23, 59, 59); // hacer que el fin del día sea inclusivo
+                        inDate = (!s || rDate >= s) && (!e || rDate <= e);
+                    }
                 }
 
                 const inDep = !state.dep || state.dep.length === 0 || state.dep.includes(r.Dependencia);
@@ -1098,14 +1109,13 @@
             document.getElementById('kpi-muns').textContent = unique(filteredData, 'Municipio');
             document.getElementById('kpi-locs').textContent = unique(filteredData, 'Localidad');
 
-            // Breakdown counts por género
+            // Breakdown counts por género: solo géneros presentes en filteredData
             const genderCounts = {};
-            const uniqueGenders = new Set([...rawData.map(r => r.Género).filter(g => g && g !== 'N/A')]);
-            uniqueGenders.forEach(g => { genderCounts[g] = 0; });
-            filteredData.forEach(r => { if (r.Género && genderCounts[r.Género] !== undefined) genderCounts[r.Género]++; });
-
-            // Mantener breakdown pequeño dentro de Total
-            updateGenderBreakdown('kpi-gender-total', filteredData);
+            filteredData.forEach(r => {
+                if (r.Género && r.Género !== 'N/A') {
+                    genderCounts[r.Género] = (genderCounts[r.Género] || 0) + 1;
+                }
+            });
 
             if (comparisonData.length > 0) {
                 updateCompBadge('comp-total', filteredData.length, comparisonData.length);
@@ -1115,11 +1125,25 @@
                 ['comp-total', 'comp-muns', 'comp-locs'].forEach(id => document.getElementById(id).innerHTML = '');
             }
 
+            // Build active filter description
             const filterDesc = [];
-            if (filtersObj.dep.length > 0) filterDesc.push(`Dep: ${filtersObj.dep.length} sel.`);
-            if (filtersObj.mun.length > 0) filterDesc.push(`Mun: ${filtersObj.mun.length} sel.`);
-            if (filtersObj.tema.length > 0) filterDesc.push(`Tema: ${filtersObj.tema.length} sel.`);
-            if (filtersObj.gender.length > 0) filterDesc.push(`Género: ${filtersObj.gender.length} sel.`);
+            // Add date filter info
+            const grain = filtersObj.grain;
+            if (grain === 'day' && filtersObj.start) filterDesc.push(`Día: ${filtersObj.start}`);
+            else if (grain === 'month' && filtersObj.start) {
+                const [y, m] = filtersObj.start.split('-');
+                const monthNames = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+                filterDesc.push(`Mes: ${monthNames[parseInt(m,10)-1]} ${y}`);
+            } else if (grain === 'year' && filtersObj.start) filterDesc.push(`Año: ${filtersObj.start}`);
+            else if (grain === 'quarter' && filtersObj.start) filterDesc.push(`Trimestre: ${filtersObj.start}`);
+            else if (grain === 'range') {
+                if (filtersObj.start) filterDesc.push(`Desde: ${filtersObj.start}`);
+                if (filtersObj.end) filterDesc.push(`Hasta: ${filtersObj.end}`);
+            }
+            if (filtersObj.dep.length > 0) filterDesc.push(`Dep: ${filtersObj.dep.length === 1 ? filtersObj.dep[0] : filtersObj.dep.length + ' sel.'}`);
+            if (filtersObj.mun.length > 0) filterDesc.push(`Mun: ${filtersObj.mun.length === 1 ? filtersObj.mun[0] : filtersObj.mun.length + ' sel.'}`);
+            if (filtersObj.tema.length > 0) filterDesc.push(`Tema: ${filtersObj.tema.length === 1 ? filtersObj.tema[0] : filtersObj.tema.length + ' sel.'}`);
+            if (filtersObj.gender.length > 0) filterDesc.push(`Género: ${filtersObj.gender.length === 1 ? filtersObj.gender[0] : filtersObj.gender.length + ' sel.'}`);
 
             const desc = filterDesc.length > 0 ? filterDesc.join(' | ') : 'Sin filtros activos';
             ['total', 'muns', 'locs'].forEach(id => document.getElementById(`filters-${id}`).textContent = desc);
@@ -1131,15 +1155,14 @@
             const dynamicCards = grid.querySelectorAll('.dynamic-card');
             dynamicCards.forEach(card => card.remove());
 
-            // Add dynamic cards based on active genres sorted by count
+            // Add dynamic cards based ONLY on genres present in filteredData, sorted by count
             const sortedGenders = Object.keys(genderCounts).sort((a, b) => genderCounts[b] - genderCounts[a]);
             const colorPalette = ['#350c19', '#ab8345', '#6b7280', '#10b981', '#3b82f6'];
 
             sortedGenders.forEach((gender, index) => {
                 const count = genderCounts[gender];
-                // Show cards even if 0 if we're not heavily filtering, for UI consistency
-                if (count === 0 && (filtersObj.dep.length > 0 || filtersObj.mun.length > 0)) return; // Skip 0s ONLY if filtering specifically
-
+                // Only show genres that actually have records in the current filter
+                if (count === 0) return;
 
                 const card = document.createElement('div');
                 card.className = 'kpi-card dynamic-card';
@@ -1366,27 +1389,24 @@
                 let key = '';
                 let label = '';
 
-                if (!filters.start && !filters.dep && !filters.mun && !filters.tema) {
-                    // sin filtros: agrupar por mes-año
-                    key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-                    label = `${months[d.getMonth()]} ${d.getFullYear()}`;
-                } else if (filters.grain === 'year') {
+                if (filtersState.grain === 'year') {
                     // show months of that year (use YYYY-MM key)
                     key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
                     label = months[d.getMonth()];
-                } else if (filters.grain === 'month') {
+                } else if (filtersState.grain === 'month') {
                     // group by week number within month, include year-month for uniqueness
                     const week = Math.ceil(d.getDate() / 7);
                     key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-W${week}`;
                     label = `Semana ${week}`;
-                } else if (filters.grain === 'quarter') {
+                } else if (filtersState.grain === 'quarter') {
                     const quarter = Math.floor(d.getMonth() / 3) + 1;
                     key = `${d.getFullYear()}-Q${quarter}`;
                     label = `Q${quarter} ${d.getFullYear()}`;
-                } else if (filters.grain === 'day') {
+                } else if (filtersState.grain === 'day') {
                     key = d.toISOString().slice(0, 10);
                     label = key;
                 } else {
+                    // range or default: group by month-year
                     key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
                     label = `${months[d.getMonth()]} ${d.getFullYear()}`;
                 }
