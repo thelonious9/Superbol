@@ -1135,6 +1135,21 @@
     // ─── GUARDAR ──────────────────────────────────────────────────────────────
     document.getElementById('notaForm').onsubmit = e => {
       e.preventDefault();
+      
+      // Validación: Ningún campo vacío excepto "Tema"
+      const camposVacios = [];
+      CAMPOS.forEach(id => {
+        const val = getValor(id).trim();
+        if (!val && id !== 'tema') {
+          camposVacios.push(id);
+        }
+      });
+      
+      if (camposVacios.length > 0) {
+        alert('Por favor, completa todos los campos antes de guardar. (El único campo opcional es "Tema")');
+        return; // Detener el proceso de guardado
+      }
+
       const data = {};
       CAMPOS.forEach(id => data[id] = getValor(id));
       if (filaEnEdicion !== null) {
