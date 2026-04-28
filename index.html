@@ -229,6 +229,77 @@
       pointer-events: none;
     }
 
+    /* ID Estructurado */
+    .id-container-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      border: 2px solid var(--color-border);
+      background: var(--color-fondo-form);
+      position: relative;
+      min-width: 250px;
+    }
+
+    .id-container {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex: 1;
+      height: 100%;
+    }
+
+    .id-container .sub-campo {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+
+    .id-container .sub-campo input {
+      width: 100%;
+      min-width: 0;
+      border: none !important;
+      padding: 10px 8px !important;
+      background: transparent !important;
+      color: var(--color-text) !important;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .id-container .sub-campo input:focus {
+      background: var(--color-text) !important;
+      color: var(--color-fondo-pagina) !important;
+    }
+
+    .id-container .separator {
+      font-weight: bold;
+      color: var(--color-text);
+      user-select: none;
+      padding: 0 2px;
+      background: transparent;
+    }
+
+    #id_part1 {
+      flex: 2;
+    }
+
+    #id_part2 {
+      flex: 1.2;
+    }
+
+    #id_part3 {
+      flex: 1;
+    }
+
+    #id_part4 {
+      flex: 1;
+      text-align: center;
+      background: var(--color-blocked-bg) !important;
+      font-weight: bold;
+      pointer-events: none;
+    }
+
     .sugerencias {
       position: absolute;
       top: 100%;
@@ -488,7 +559,7 @@
       <div id="sugUsuario" class="sugerencias"></div>
     </div>
 
-    <!-- Género + ID -->
+    <!-- Género -->
     <label for="genero">Género:</label>
     <div class="campo">
       <input type="text" id="genero" autocomplete="off" required>
@@ -500,11 +571,55 @@
       <div id="sugGenero" class="sugerencias"></div>
     </div>
 
+    <!-- Dependencia + Organismo (Movidosc aquí) -->
+    <label for="dependencia">Dependencia:</label>
+    <div class="campo">
+      <input type="text" id="dependencia" autocomplete="off" required>
+      <div class="campo-actions">
+        <button type="button" class="btn-campo" onclick="mostrarTodo('dependencia')" tabindex="-1">🔽</button>
+        <input type="checkbox" id="checkDependencia" onchange="alternarBloqueo('dependencia')" tabindex="-1">
+        <label for="checkDependencia" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+      <div id="sugDependencia" class="sugerencias"></div>
+    </div>
+
+    <label for="organismo">Organismo:</label>
+    <div class="campo">
+      <input type="text" id="organismo" autocomplete="off" placeholder="Selecciona Dependencia primero">
+      <div class="campo-actions">
+        <button type="button" class="btn-campo" onclick="mostrarTodo('organismo')" tabindex="-1">🔽</button>
+        <input type="checkbox" id="checkOrganismo" onchange="alternarBloqueo('organismo')" tabindex="-1">
+        <label for="checkOrganismo" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+      </div>
+      <div id="sugOrganismo" class="sugerencias"></div>
+    </div>
+
+    <!-- ID Estructurado -->
     <label for="id_consecutivo">ID:</label>
     <div class="campo">
-      <input type="text" id="id_consecutivo" placeholder="Alfanumérico (ej. A123)">
+      <div class="id-container-wrapper">
+        <div class="id-container">
+          <div class="sub-campo">
+            <input type="text" id="id_part1" placeholder="Sigla" autocomplete="off" required oninput="updateHiddenID()">
+            <div id="sugId_part1" class="sugerencias"></div>
+          </div>
+          <span class="separator">/</span>
+          <div class="sub-campo">
+            <input type="text" id="id_part2" placeholder="Tipo" autocomplete="off" required oninput="updateHiddenID()">
+            <div id="sugId_part2" class="sugerencias"></div>
+          </div>
+          <div class="sub-campo">
+            <input type="text" id="id_part3" placeholder="Num" autocomplete="off" required oninput="updateHiddenID()">
+          </div>
+          <span class="separator">/</span>
+          <div class="sub-campo">
+            <input type="text" id="id_part4" readonly tabindex="-1">
+          </div>
+        </div>
+      </div>
+      <input type="hidden" id="id_consecutivo" name="id_consecutivo">
       <div class="campo-actions">
-        <input type="checkbox" id="checkId" onchange="alternarBloqueo('id_consecutivo')" tabindex="-1">
+        <input type="checkbox" id="checkId" onchange="alternarBloqueoID()" tabindex="-1">
         <label for="checkId" class="lock-label"><i class="fa-solid fa-lock"></i></label>
       </div>
     </div>
@@ -538,29 +653,6 @@
         <input type="checkbox" id="checkTitular" onchange="alternarBloqueo('titular')" tabindex="-1">
         <label for="checkTitular" class="lock-label"><i class="fa-solid fa-lock"></i></label>
       </div>
-    </div>
-
-    <!-- Dependencia + Organismo (dependiente) -->
-    <label for="dependencia">Dependencia:</label>
-    <div class="campo">
-      <input type="text" id="dependencia" autocomplete="off" required>
-      <div class="campo-actions">
-        <button type="button" class="btn-campo" onclick="mostrarTodo('dependencia')" tabindex="-1">🔽</button>
-        <input type="checkbox" id="checkDependencia" onchange="alternarBloqueo('dependencia')" tabindex="-1">
-        <label for="checkDependencia" class="lock-label"><i class="fa-solid fa-lock"></i></label>
-      </div>
-      <div id="sugDependencia" class="sugerencias"></div>
-    </div>
-
-    <label for="organismo">Organismo:</label>
-    <div class="campo">
-      <input type="text" id="organismo" autocomplete="off" placeholder="Selecciona Dependencia primero">
-      <div class="campo-actions">
-        <button type="button" class="btn-campo" onclick="mostrarTodo('organismo')" tabindex="-1">🔽</button>
-        <input type="checkbox" id="checkOrganismo" onchange="alternarBloqueo('organismo')" tabindex="-1">
-        <label for="checkOrganismo" class="lock-label"><i class="fa-solid fa-lock"></i></label>
-      </div>
-      <div id="sugOrganismo" class="sugerencias"></div>
     </div>
 
     <!-- Municipio + Localidad (dependiente) -->
@@ -843,6 +935,8 @@
     let notas = JSON.parse(localStorage.getItem('superbol_notas') || '[]');
     let depOrgMap = {};   // { "Bienestar": ["IAAMEH","Inhjuve",...], ... }
     let munLocMap = {};   // { "Actopan": ["Actopan","Benito Juárez",...], ... }
+    let depAbrevMap = {};
+    let genAbrevMap = {};
     let filaEnEdicion = null;
     let zoomLevel = 1.0;
     let ordenActual = { col: 'fecha', dir: 'desc' };
@@ -1012,6 +1106,50 @@
       locInput.placeholder = lista.length ? 'Seleccionar Localidad' : 'Sin localidades para este municipio';
     }
 
+    // ─── ID Estructurado ──────────────────────────────────────────────────────
+    function updateHiddenID() {
+      const p1 = getValor('id_part1').trim();
+      const p2 = getValor('id_part2').trim();
+      const p3 = getValor('id_part3').trim();
+      const p4 = getValor('id_part4').trim();
+      const hidden = document.getElementById('id_consecutivo');
+
+      if (p1 || p2 || p3 || p4) {
+        hidden.value = `${p1}/${p2}${p3}/${p4}`;
+      } else {
+        hidden.value = '';
+      }
+    }
+
+    function actualizarID() {
+      const dep = getValor('dependencia');
+      const gen = getValor('genero');
+      const fec = getValor('fecha');
+
+      const p1 = document.getElementById('id_part1');
+      const p2 = document.getElementById('id_part2');
+      const p4 = document.getElementById('id_part4');
+
+      if (depAbrevMap[dep]) p1.value = depAbrevMap[dep];
+      if (genAbrevMap[gen]) p2.value = genAbrevMap[gen];
+      if (fec) p4.value = fec.split('-')[0];
+
+      updateHiddenID();
+    }
+
+    function alternarBloqueoID() {
+      const chk = document.getElementById('checkId');
+      const isChecked = chk.checked;
+      ['id_part1', 'id_part2', 'id_part3'].forEach(id => {
+        const el = document.getElementById(id);
+        el.readOnly = isChecked;
+        el.classList.toggle('bloqueado', isChecked);
+      });
+      const wrapper = document.querySelector('.id-container-wrapper');
+      if (wrapper) wrapper.classList.toggle('bloqueado', isChecked);
+      localStorage.setItem('bloqueado_id_consecutivo', isChecked);
+    }
+
     // ─── FOCO ─────────────────────────────────────────────────────────────────
     function moverFoco(actual) {
       const todos = Array.from(document.querySelectorAll(
@@ -1023,10 +1161,20 @@
 
     // ─── INIT ─────────────────────────────────────────────────────────────────
     async function init() {
-      // 1. Listas simples
+      // 1. Cargar mapeos de siglas de forma robusta
+      try {
+        const [depRows, genRows] = await Promise.all([
+          cargarCSV('./Dependencia.csv'),
+          cargarCSV('./Género.csv')
+        ]);
+        limpiarFilas(depRows).forEach(([dep, sigla]) => { if (dep) depAbrevMap[dep] = sigla; });
+        limpiarFilas(genRows).forEach(([gen, sigla]) => { if (gen) genAbrevMap[gen] = sigla; });
+      } catch (e) { }
+
+      // 2. Listas simples
       const simplesConf = [
-        ['usuario', './Usuario.csv', null],
-        ['genero', URLS_CSV.genero, null],
+        ['usuario', URLS_CSV.usuario, null],
+        ['genero', URLS_CSV.genero, () => actualizarID()],
         ['tipo', URLS_CSV.tipo, null],
         ['emite', URLS_CSV.emite, null],
         ['tema', URLS_CSV.tema, null],
@@ -1037,32 +1185,54 @@
         ['logistica', URLS_CSV.logistica, null],
         ['revision', URLS_CSV.revision, null],
       ];
-      for (const [id, url] of simplesConf) {
-        const lista = await cargarLista(url);
-        registrarAutocompletado(id, lista, null);
+
+      for (const [id, url, cb] of simplesConf) {
+        try {
+          if (!url) continue;
+          const lista = await cargarLista(url);
+          registrarAutocompletado(id, lista, cb);
+        } catch (e) { }
       }
 
-      // 2. Dependencia → Organismo
-      //    Organismo.csv = col1:Dependencia, col2:Organismo
-      depOrgMap = await cargarMapa(URLS_CSV.organismo);
-      const depList = Object.keys(depOrgMap).sort((a, b) => a.localeCompare(b, 'es'));
-      registrarAutocompletado('dependencia', depList, dep => {
-        actualizarOrganismo(dep);
-      });
-      // Organismo: empieza vacío; se llena cuando se elige Dependencia
-      registrarAutocompletado('organismo', [], null);
+      // 3. Dependencia → Organismo
+      try {
+        depOrgMap = await cargarMapa(URLS_CSV.organismo);
+        const depList = Object.keys(depOrgMap).sort((a, b) => a.localeCompare(b, 'es'));
+        registrarAutocompletado('dependencia', depList, dep => {
+          actualizarOrganismo(dep);
+          actualizarID();
+        });
+        registrarAutocompletado('organismo', [], null);
+      } catch (e) { }
 
-      // 3. Municipio → Localidad
-      //    Localidad.csv = col1:"Municipio o demarcación territorial", col2:Localidad
-      munLocMap = await cargarMapa(URLS_CSV.localidad);
-      const munList = Object.keys(munLocMap).sort((a, b) => a.localeCompare(b, 'es'));
-      registrarAutocompletado('municipio', munList, mun => {
-        actualizarLocalidad(mun);
-      });
-      registrarAutocompletado('localidad', [], null);
+      // 4. Municipio → Localidad
+      try {
+        munLocMap = await cargarMapa(URLS_CSV.localidad);
+        const munList = Object.keys(munLocMap).sort((a, b) => a.localeCompare(b, 'es'));
+        registrarAutocompletado('municipio', munList, mun => {
+          actualizarLocalidad(mun);
+        });
+        registrarAutocompletado('localidad', [], null);
+      } catch (e) { }
 
-      // 4. Restaurar bloqueos guardados
+      // 5. Sugerencias para las partes del ID
+      registrarAutocompletado('id_part1', Object.values(depAbrevMap), updateHiddenID);
+      registrarAutocompletado('id_part2', Object.values(genAbrevMap), updateHiddenID);
+
+      // Listeners para auto-llenar el ID (adicionales al callback de autocompletado)
+      document.getElementById('dependencia').addEventListener('blur', actualizarID);
+      document.getElementById('genero').addEventListener('blur', actualizarID);
+      document.getElementById('fecha').addEventListener('change', actualizarID);
+
+      // 5. Restaurar bloqueos guardados
       CAMPOS.forEach(id => {
+        if (id === 'id_consecutivo') {
+          if (localStorage.getItem('bloqueado_id_consecutivo') === 'true') {
+            document.getElementById('checkId').checked = true;
+            alternarBloqueoID();
+          }
+          return;
+        }
         if (localStorage.getItem(`bloqueado_${id}`) === 'true') {
           const chk = document.getElementById(getCheckId(id));
           if (chk) { chk.checked = true; alternarBloqueo(id); }
@@ -1119,6 +1289,10 @@
         const chk = document.getElementById(getCheckId(id));
         if (!chk || !chk.checked) { if (id !== 'fecha') setValor(id, ''); }
       });
+      // Limpiar partes del ID si no está bloqueado
+      if (localStorage.getItem('bloqueado_id_consecutivo') !== 'true') {
+        ['id_part1', 'id_part2', 'id_part3', 'id_part4'].forEach(id => setValor(id, ''));
+      }
       ['titular', 'notas'].forEach(ajustarAlturaCampo);
     }
 
@@ -1128,6 +1302,9 @@
         if (chk) { chk.checked = false; alternarBloqueo(id); }
         setValor(id, '');
       });
+      const chkId = document.getElementById('checkId');
+      if (chkId) { chkId.checked = false; alternarBloqueoID(); }
+      ['id_part1', 'id_part2', 'id_part3', 'id_part4'].forEach(id => setValor(id, ''));
       resetEdicion();
       ['titular', 'notas'].forEach(ajustarAlturaCampo);
     }
@@ -1214,6 +1391,24 @@
       document.getElementById('btnEliminar').style.display = 'inline-block';
       if (n.dependencia) actualizarOrganismo(n.dependencia);
       if (n.municipio) actualizarLocalidad(n.municipio);
+
+      // Desglosar ID si existe
+      if (n.id_consecutivo && n.id_consecutivo.includes('/')) {
+        const parts = n.id_consecutivo.split('/');
+        setValor('id_part1', parts[0] || '');
+        if (parts[1]) {
+          // Asumimos que los primeros caracteres son letras (Tipo) y el resto números (Num)
+          const match = parts[1].match(/^([A-Za-z.]+)([0-9]*)$/);
+          if (match) {
+            setValor('id_part2', match[1]);
+            setValor('id_part3', match[2]);
+          } else {
+            setValor('id_part2', parts[1]);
+          }
+        }
+        setValor('id_part4', parts[2] || '');
+      }
+
       ['titular', 'notas'].forEach(ajustarAlturaCampo);
       renderizarTabla();
       window.scrollTo(0, 0);
