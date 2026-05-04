@@ -7,8 +7,7 @@
     <title>Dashboard Institucional - Análisis de Datos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
@@ -768,6 +767,7 @@
 
     <script>
         const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1CkUlaK6pwA9b5T28bJCPP5tpHpjJPRqy-RmbDROxF1o/export?format=csv&gid=1380011296';
+        Chart.register(ChartDataLabels);
 
         let filters = {
             dep: null,
@@ -1335,8 +1335,24 @@
 
             if (charts[canvasId]) charts[canvasId].destroy();
 
+            const isDark = document.body.classList.contains('dark-theme');
+            const totalColor = isDark ? '#f9f1e8' : '#350c19';
             const colorPalette = ['#350c19', '#ab8345', '#6b7280', '#10b981', '#3b82f6'];
-            const datasets = genders.map((g, idx) => ({ label: g, data: sortedKeys.map(k => counts[k][g] || 0), backgroundColor: colorPalette[idx % colorPalette.length] }));
+
+            const datasets = genders.map((g, idx) => {
+                return {
+                    label: g,
+                    data: sortedKeys.map(k => counts[k][g] || 0),
+                    backgroundColor: colorPalette[idx % colorPalette.length],
+                    datalabels: {
+                        color: '#fff',
+                        font: { weight: 'bold', size: 11 },
+                        formatter: (v) => v > 0 ? v : '',
+                        anchor: 'center',
+                        align: 'center'
+                    }
+                };
+            });
 
             charts[canvasId] = new Chart(document.getElementById(canvasId), {
                 type: 'bar',
@@ -1347,8 +1363,17 @@
                 options: {
                     indexAxis: 'y',
                     maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            top: 25,
+                            right: 10
+                        }
+                    },
                     plugins: {
                         legend: { position: 'bottom' },
+                        datalabels: {
+                            // Global config for segment labels
+                        },
                         tooltip: {
                             callbacks: {
                                 label: (context) => {
@@ -1360,7 +1385,12 @@
                         }
                     },
                     scales: {
-                        x: { stacked: true, beginAtZero: true, grid: { display: false } },
+                        x: { 
+                            stacked: true, 
+                            beginAtZero: true, 
+                            grid: { display: false },
+                            grace: '10%'
+                        },
                         y: {
                             stacked: true,
                             ticks: {
@@ -1369,7 +1399,30 @@
                             }
                         }
                     }
-                }
+                },
+                plugins: [{
+                    id: 'totalLabels',
+                    afterDraw: (chart) => {
+                        const { ctx, chartArea: { right, top }, scales: { y } } = chart;
+                        ctx.save();
+                        ctx.font = 'bold 12px Inter';
+                        ctx.fillStyle = totalColor;
+                        ctx.textAlign = 'right';
+                        
+                        // Header
+                        ctx.textBaseline = 'bottom';
+                        ctx.fillText('TOTAL', right - 5, top - 10);
+                        
+                        // Data
+                        ctx.textBaseline = 'middle';
+                        sortedKeys.forEach((key, i) => {
+                            const total = counts[key]?.total || 0;
+                            const yPos = y.getPixelForTick(i);
+                            ctx.fillText(total, right - 5, yPos);
+                        });
+                        ctx.restore();
+                    }
+                }]
             });
         }
 
@@ -1508,7 +1561,14 @@
                 options: {
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } }
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+                        datalabels: {
+                            color: '#fff',
+                            font: { weight: 'bold', size: 10 },
+                            formatter: (value) => value > 0 ? value : '',
+                            anchor: 'center',
+                            align: 'center'
+                        }
                     },
                     scales: {
                         y: { beginAtZero: true },
