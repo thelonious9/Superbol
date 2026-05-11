@@ -725,17 +725,17 @@
     <div></div>
     <div></div>
 
-    <!-- Binarios: Foto/imágenes, Video, Audio -->
-    <label for="foto_imagenes">Foto/imágenes:</label>
+    <!-- Binarios: Fotografía, Video, Audio -->
+    <label for="fotografia_bin">Fotografía:</label>
     <div class="campo">
-      <select id="foto_imagenes">
+      <select id="fotografia_bin">
         <option value="">— Seleccionar —</option>
         <option value="Sí">Sí</option>
         <option value="No">No</option>
       </select>
       <div class="campo-actions">
-        <input type="checkbox" id="checkFoto_imagenes" onchange="alternarBloqueo('foto_imagenes')" tabindex="-1">
-        <label for="checkFoto_imagenes" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+        <input type="checkbox" id="checkFotografia_bin" onchange="alternarBloqueo('fotografia_bin')" tabindex="-1">
+        <label for="checkFotografia_bin" class="lock-label"><i class="fa-solid fa-lock"></i></label>
       </div>
     </div>
 
@@ -787,26 +787,26 @@
       <div id="sugReporta" class="sugerencias"></div>
     </div>
 
-    <label for="fotografia">Fotografía:</label>
+    <label for="fotografo">Fotógrafo:</label>
     <div class="campo">
-      <input type="text" id="fotografia" autocomplete="off">
+      <input type="text" id="fotografo" autocomplete="off">
       <div class="campo-actions">
-        <button type="button" class="btn-campo" onclick="mostrarTodo('fotografia')" tabindex="-1">🔽</button>
-        <input type="checkbox" id="checkFotografia" onchange="alternarBloqueo('fotografia')" tabindex="-1">
-        <label for="checkFotografia" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+        <button type="button" class="btn-campo" onclick="mostrarTodo('fotografo')" tabindex="-1">🔽</button>
+        <input type="checkbox" id="checkFotografo" onchange="alternarBloqueo('fotografo')" tabindex="-1">
+        <label for="checkFotografo" class="lock-label"><i class="fa-solid fa-lock"></i></label>
       </div>
-      <div id="sugFotografia" class="sugerencias"></div>
+      <div id="sugFotografo" class="sugerencias"></div>
     </div>
 
-    <label for="audiovisual">Audiovisual:</label>
+    <label for="camarografo">Camarógrafo:</label>
     <div class="campo">
-      <input type="text" id="audiovisual" autocomplete="off">
+      <input type="text" id="camarografo" autocomplete="off">
       <div class="campo-actions">
-        <button type="button" class="btn-campo" onclick="mostrarTodo('audiovisual')" tabindex="-1">🔽</button>
-        <input type="checkbox" id="checkAudiovisual" onchange="alternarBloqueo('audiovisual')" tabindex="-1">
-        <label for="checkAudiovisual" class="lock-label"><i class="fa-solid fa-lock"></i></label>
+        <button type="button" class="btn-campo" onclick="mostrarTodo('camarografo')" tabindex="-1">🔽</button>
+        <input type="checkbox" id="checkCamarografo" onchange="alternarBloqueo('camarografo')" tabindex="-1">
+        <label for="checkCamarografo" class="lock-label"><i class="fa-solid fa-lock"></i></label>
       </div>
-      <div id="sugAudiovisual" class="sugerencias"></div>
+      <div id="sugCamarografo" class="sugerencias"></div>
     </div>
 
     <label for="redes">Redes:</label>
@@ -876,12 +876,12 @@
 
           <th onclick="ordenar('enlace')">Enlace</th>
           <th onclick="ordenar('revision')">Revisión</th>
-          <th onclick="ordenar('foto_imagenes')">Fotos</th>
+          <th onclick="ordenar('fotografia_bin')">Fotografía</th>
           <th onclick="ordenar('video')">Video</th>
           <th onclick="ordenar('audio')">Audio</th>
           <th onclick="ordenar('reporta')">Reporta</th>
-          <th onclick="ordenar('fotografia')">Fotografía</th>
-          <th onclick="ordenar('audiovisual')">Audiovisual</th>
+          <th onclick="ordenar('fotografo')">Fotógrafo</th>
+          <th onclick="ordenar('camarografo')">Camarógrafo</th>
           <th onclick="ordenar('redes')">Redes</th>
           <th onclick="ordenar('logistica')">Logística</th>
           <th>Acciones</th>
@@ -895,15 +895,15 @@
     // ─── CONFIGURACIÓN ────────────────────────────────────────────────────────
     const CAMPOS = ['usuario', 'genero', 'id_consecutivo', 'fecha', 'titular', 'dependencia', 'organismo',
       'municipio', 'localidad', 'tipo', 'emite', 'tema', 'enlace', 'revision',
-      'foto_imagenes', 'video', 'audio', 'reporta', 'fotografia', 'audiovisual', 'redes', 'logistica'];
+      'fotografia_bin', 'video', 'audio', 'reporta', 'fotografo', 'camarografo', 'redes', 'logistica'];
 
     const CAMPOS_OBLIGATORIOS = ['usuario', 'genero', 'fecha', 'titular', 'dependencia', 'municipio', 'tipo', 'emite'];
 
     // Campos que son <select> (no manejan autocomplete de texto)
-    const CAMPOS_SELECT = ['foto_imagenes', 'video', 'audio'];
+    const CAMPOS_SELECT = ['fotografia_bin', 'video', 'audio'];
 
     function getCheckId(id) {
-      const excepciones = { 'id_consecutivo': 'checkId', 'foto_imagenes': 'checkFoto_imagenes' };
+      const excepciones = { 'id_consecutivo': 'checkId', 'fotografia_bin': 'checkFotografia_bin' };
       return excepciones[id] || `check${id.charAt(0).toUpperCase() + id.slice(1)}`;
     }
 
@@ -924,8 +924,8 @@
       emite: './Emisión.csv',
       tema: './Tema.csv',
       reporta: './Reportere.csv',
-      fotografia: './Foto.csv',
-      audiovisual: './Video.csv',
+      fotografo: './Foto.csv',
+      camarografo: './Video.csv',
       redes: './Redes.csv',
       logistica: './Logistica.csv',
       revision: './Revision.csv'
@@ -1179,10 +1179,8 @@
         ['emite', URLS_CSV.emite, null],
         ['tema', URLS_CSV.tema, null],
         ['reporta', URLS_CSV.reporta, null],
-        ['fotografia', URLS_CSV.fotografia, null],
-        ['audiovisual', URLS_CSV.audiovisual, null],
-        ['redes', URLS_CSV.redes, null],
-        ['logistica', URLS_CSV.logistica, null],
+        ['fotografo', URLS_CSV.fotografo, null],
+        ['camarografo', URLS_CSV.camarografo, null],
         ['revision', URLS_CSV.revision, null],
       ];
 
@@ -1473,7 +1471,7 @@
 
     // ─── NO APLICA ────────────────────────────────────────────────────────────
     function noAplica() {
-      ['reporta', 'fotografia', 'audiovisual', 'redes', 'logistica'].forEach(id => {
+      ['reporta', 'fotografo', 'camarografo', 'redes', 'logistica'].forEach(id => {
         setValor(id, 'N/A');
       });
     }
@@ -1508,13 +1506,13 @@
           "Emite": n.emite,
           "Tema": n.tema,
           "Enlace": n.enlace,
-          "Revisión editorial": n.revision,
-          "Foto/imágenes": n.foto_imagenes,
+          "Revisión": n.revision,
+          "Fotografía": n.fotografia_bin,
           "Video": n.video,
           "Audio": n.audio,
           "Reporta": n.reporta,
-          "Fotografía": n.fotografia,
-          "Audiovisual": n.audiovisual,
+          "Fotógrafo": n.fotografo,
+          "Camarógrafo": n.camarografo,
           "Redes": n.redes,
           "Logística": n.logistica
         }));
