@@ -1071,14 +1071,16 @@
           e.preventDefault(); indice = (indice + 1) % N; resaltar(items, indice);
         } else if (e.key === 'ArrowUp') {
           e.preventDefault(); indice = (indice - 1 + N) % N; resaltar(items, indice);
-        } else if (e.key === 'Enter' && indice >= 0) {
+        } else if (e.key === 'Enter') {
           e.preventDefault();
-          const val = items[indice].textContent;
-          input.value = val;
-          cerrarSugerencias();
-          if (alSeleccionar) alSeleccionar(val);
+          if (indice >= 0) {
+            const val = items[indice].textContent;
+            input.value = val;
+            cerrarSugerencias();
+            if (alSeleccionar) alSeleccionar(val);
+            indice = -1;
+          }
           moverFoco(input);
-          indice = -1;
         }
       });
 
@@ -1142,8 +1144,16 @@
       const isChecked = chk.checked;
       ['id_part1', 'id_part2', 'id_part3'].forEach(id => {
         const el = document.getElementById(id);
-        el.readOnly = isChecked;
-        el.classList.toggle('bloqueado', isChecked);
+        if (isChecked) {
+          el.readOnly = true;
+          el.classList.add('bloqueado');
+        } else {
+          let parentLocked = false;
+          if (id === 'id_part1') parentLocked = localStorage.getItem('bloqueado_dependencia') === 'true';
+          if (id === 'id_part2') parentLocked = localStorage.getItem('bloqueado_genero') === 'true';
+          el.readOnly = parentLocked;
+          el.classList.toggle('bloqueado', parentLocked);
+        }
       });
       const wrapper = document.querySelector('.id-container-wrapper');
       if (wrapper) wrapper.classList.toggle('bloqueado', isChecked);
@@ -1181,6 +1191,8 @@
         ['reporta', URLS_CSV.reporta, null],
         ['fotografo', URLS_CSV.fotografo, null],
         ['camarografo', URLS_CSV.camarografo, null],
+        ['redes', URLS_CSV.redes, null],
+        ['logistica', URLS_CSV.logistica, null],
         ['revision', URLS_CSV.revision, null],
       ];
 
@@ -1241,6 +1253,7 @@
           if (id === 'municipio') actualizarLocalidad(val);
         }
       });
+      actualizarID(); // Asegurar que partes del ID se llenen
 
       // 5. Fecha de hoy por defecto
       const fechaEl = document.getElementById('fecha');
@@ -1269,6 +1282,21 @@
       localStorage.setItem(`bloqueado_${id}`, chk.checked);
       if (chk.checked) localStorage.setItem(id, el.value);
       else localStorage.removeItem(id);
+
+      // Sincronizar con partes del ID
+      const masterLocked = localStorage.getItem('bloqueado_id_consecutivo') === 'true';
+      if (!masterLocked) {
+        if (id === 'dependencia') {
+          const p1 = document.getElementById('id_part1');
+          if (p1) { p1.readOnly = chk.checked; p1.classList.toggle('bloqueado', chk.checked); }
+        } else if (id === 'genero') {
+          const p2 = document.getElementById('id_part2');
+          if (p2) { p2.readOnly = chk.checked; p2.classList.toggle('bloqueado', chk.checked); }
+        } else if (id === 'fecha') {
+          const p4 = document.getElementById('id_part4');
+          if (p4) p4.classList.toggle('bloqueado', chk.checked);
+        }
+      }
     }
 
     function ajustarAlturaCampo(id) {
@@ -1287,9 +1315,12 @@
         const chk = document.getElementById(getCheckId(id));
         if (!chk || !chk.checked) { if (id !== 'fecha') setValor(id, ''); }
       });
-      // Limpiar partes del ID si no está bloqueado
+      // Limpiar partes del ID
+      setValor('id_part3', ''); // Siempre limpiar Num
       if (localStorage.getItem('bloqueado_id_consecutivo') !== 'true') {
-        ['id_part1', 'id_part2', 'id_part3', 'id_part4'].forEach(id => setValor(id, ''));
+        if (localStorage.getItem('bloqueado_dependencia') !== 'true') setValor('id_part1', '');
+        if (localStorage.getItem('bloqueado_genero') !== 'true') setValor('id_part2', '');
+        if (localStorage.getItem('bloqueado_fecha') !== 'true') setValor('id_part4', '');
       }
       ['titular', 'notas'].forEach(ajustarAlturaCampo);
     }
@@ -1338,11 +1369,15 @@
       document.getElementById('titular').focus();
     };
 
-    // Al presionar Enter en Enlace, no guardar, solo avanzar
-    document.getElementById('enlace').addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        moverFoco(this);
+    // Prevenir que Enter guarde la nota en cualquier campo, solo navegar
+    document.getElementById('notaForm').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && e.target.tagName !== 'BUTTON' && !e.ctrlKey) {
+        // Si el campo tiene su propio manejador de autocompletado, este ya hace preventDefault
+        // Para campos sin autocompletado (como enlace o id_part3), lo hacemos aquí:
+        if (!e.target.dataset.lista && e.target.id !== 'id_part1' && e.target.id !== 'id_part2') {
+          e.preventDefault();
+          moverFoco(e.target);
+        }
       }
     });
 
@@ -1455,16 +1490,26 @@
 
     // ─── ATAJOS ───────────────────────────────────────────────────────────────
     document.addEventListener('keydown', e => {
-      if (e.ctrlKey && e.key === 'q') {
+      if (e.ctrlKey && (e.key === 'q' || e.key === 'Q')) {
         e.preventDefault();
         document.getElementById('notaForm').requestSubmit();
       }
-      if (e.ctrlKey && e.shiftKey && e.key === 'L') {
+      if (e.ctrlKey && e.shiftKey && (e.key === 'L' || e.key === 'l')) {
         e.preventDefault();
         const active = document.activeElement;
-        if (active && CAMPOS.includes(active.id)) {
-          const chk = document.getElementById(getCheckId(active.id));
-          if (chk) { chk.checked = !chk.checked; alternarBloqueo(active.id); }
+        if (!active) return;
+        
+        let id = active.id;
+        // Si estamos en una parte del ID, togglear el bloqueo maestro del ID
+        if (id.startsWith('id_part')) id = 'id_consecutivo';
+
+        if (CAMPOS.includes(id)) {
+          const chk = document.getElementById(getCheckId(id));
+          if (chk) {
+            chk.checked = !chk.checked;
+            if (id === 'id_consecutivo') alternarBloqueoID();
+            else alternarBloqueo(id);
+          }
         }
       }
     });
